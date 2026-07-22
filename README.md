@@ -241,15 +241,6 @@ python main.py --stage compare
 
 Genera `results/model_comparison.csv`, `results/model_comparison.xlsx` y graficas comparativas.
 
-## ETAPA 11 - Articulo cientifico IEEE
-
-```bash
-python main.py --stage article
-```
-
-Genera:
-
-- `results/article/rafdb_cnn_ieee_article.md`
 
 ## Posibles errores
 
