@@ -38,3 +38,7 @@ venv.bak/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Generated articles/journals (kept locally only)
+results/article/rafdb_cnn_ieee_article.md
+results/article/rafdb_cnn_tem_journal.docx
