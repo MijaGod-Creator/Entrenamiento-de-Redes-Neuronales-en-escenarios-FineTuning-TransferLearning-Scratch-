@@ -215,78 +215,109 @@ def predict():
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(40, 40))
     
-    face_found = False
-    face_box = None
-    face_crop = None
+    faces_results = []
     
     if len(faces) > 0:
-        # Select the largest face by area
-        largest_face = max(faces, key=lambda f: f[2] * f[3])
-        x, y, w, h = largest_face
-        face_box = {
-            "x": int(x),
-            "y": int(y),
-            "width": int(w),
-            "height": int(h)
-        }
-        # Add a margin around the face box
-        margin_x = int(w * 0.05)
-        margin_y = int(h * 0.05)
-        x1 = max(0, x - margin_x)
-        y1 = max(0, y - margin_y)
-        x2 = min(width, x + w + margin_x)
-        y2 = min(height, y + h + margin_y)
-        
-        face_crop = img[y1:y2, x1:x2]
-        face_found = True
+        for idx, (x, y, w, h) in enumerate(faces):
+            margin_x = int(w * 0.05)
+            margin_y = int(h * 0.05)
+            x1 = max(0, x - margin_x)
+            y1 = max(0, y - margin_y)
+            x2 = min(width, x + w + margin_x)
+            y2 = min(height, y + h + margin_y)
+            
+            face_crop = img[y1:y2, x1:x2]
+            if face_crop.size == 0:
+                continue
+                
+            try:
+                # Preprocess cropped face
+                face_rgb = cv2.cvtColor(face_crop, cv2.COLOR_BGR2RGB)
+                face_pil = Image.fromarray(face_rgb)
+                
+                # Build standard transform
+                transform = build_transform(image_size=(224, 224), train=False, use_augmentation=False)
+                face_tensor = transform(face_pil).unsqueeze(0).to(device)
+                
+                # Inference
+                with torch.no_grad():
+                    with model_lock:
+                        logits = current_model(face_tensor)
+                        probs = F.softmax(logits, dim=1).cpu().numpy()[0]
+                
+                # Format results
+                predictions = []
+                for e_idx, name in enumerate(EMOTION_CLASSES):
+                    spanish_name = EMOTION_TRANSLATION.get(name, name)
+                    predictions.append({
+                        "emotion": spanish_name,
+                        "probability": float(probs[e_idx]),
+                        "color": EMOTION_COLOR_MAP.get(name, "#6C757D")
+                    })
+                predictions = sorted(predictions, key=lambda x: x["probability"], reverse=True)
+                primary = predictions[0]
+                
+                faces_results.append({
+                    "id": idx + 1,
+                    "face_box": {
+                        "x": int(x),
+                        "y": int(y),
+                        "width": int(w),
+                        "height": int(h)
+                    },
+                    "primary_emotion": primary["emotion"],
+                    "probability": primary["probability"],
+                    "color": primary["color"],
+                    "predictions": predictions
+                })
+            except Exception as e:
+                print(f"Error processing face {idx}: {e}")
     else:
         # Fallback to the entire image if no face is detected
-        face_crop = img
-        face_box = {
-            "x": 0,
-            "y": 0,
-            "width": width,
-            "height": height
-        }
-        
-    # Preprocess cropped face
-    try:
-        # Convert BGR to RGB
-        face_rgb = cv2.cvtColor(face_crop, cv2.COLOR_BGR2RGB)
-        face_pil = Image.fromarray(face_rgb)
-        
-        # Build standard transform (size = 224x224, normalized to ImageNet std/mean)
-        transform = build_transform(image_size=(224, 224), train=False, use_augmentation=False)
-        face_tensor = transform(face_pil).unsqueeze(0).to(device)
-        
-        # Inference
-        with torch.no_grad():
-            with model_lock:
-                logits = current_model(face_tensor)
-                probs = F.softmax(logits, dim=1).cpu().numpy()[0]
-                
-        # Format results
-        predictions = []
-        for idx, name in enumerate(EMOTION_CLASSES):
-            spanish_name = EMOTION_TRANSLATION.get(name, name)
-            predictions.append({
-                "emotion": spanish_name,
-                "probability": float(probs[idx]),
-                "color": EMOTION_COLOR_MAP.get(name, "#6C757D")
-            })
+        try:
+            face_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            face_pil = Image.fromarray(face_rgb)
+            transform = build_transform(image_size=(224, 224), train=False, use_augmentation=False)
+            face_tensor = transform(face_pil).unsqueeze(0).to(device)
             
-        # Sort predictions by probability descending
-        predictions = sorted(predictions, key=lambda x: x["probability"], reverse=True)
-        
-        return jsonify({
-            "face_found": face_found,
-            "face_box": face_box,
-            "predictions": predictions,
-            "model_used": current_model_name
-        })
-        
-    except Exception as e:
-        return jsonify({"error": f"Error running inference: {str(e)}"}), 500
+            with torch.no_grad():
+                with model_lock:
+                    logits = current_model(face_tensor)
+                    probs = F.softmax(logits, dim=1).cpu().numpy()[0]
+            
+            predictions = []
+            for e_idx, name in enumerate(EMOTION_CLASSES):
+                spanish_name = EMOTION_TRANSLATION.get(name, name)
+                predictions.append({
+                    "emotion": spanish_name,
+                    "probability": float(probs[e_idx]),
+                    "color": EMOTION_COLOR_MAP.get(name, "#6C757D")
+                })
+            predictions = sorted(predictions, key=lambda x: x["probability"], reverse=True)
+            primary = predictions[0]
+            
+            faces_results.append({
+                "id": 1,
+                "face_box": {
+                    "x": 0,
+                    "y": 0,
+                    "width": width,
+                    "height": height
+                },
+                "primary_emotion": primary["emotion"],
+                "probability": primary["probability"],
+                "color": primary["color"],
+                "predictions": predictions,
+                "is_fallback": True
+            })
+        except Exception as e:
+            return jsonify({"error": f"Error running fallback inference: {str(e)}"}), 500
+            
+    return jsonify({
+        "faces": faces_results,
+        "face_count": len(faces) if len(faces) > 0 else 0,
+        "model_used": current_model_name
+    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

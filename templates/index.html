@@ -524,6 +524,32 @@
         .hidden {
             display: none !important;
         }
+
+        /* Face selector chips */
+        .face-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .face-chip:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+        .face-chip.active {
+            background: var(--accent-primary);
+            color: #fff;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
     </style>
 </head>
 <body>
@@ -640,6 +666,12 @@
                     <span id="primary-emotion" class="primary-emotion" style="color: var(--text-secondary);">Ninguna</span>
                 </div>
 
+                <!-- Face Selector (Visible for multiple faces) -->
+                <div id="face-selector-container" class="hidden" style="margin-top: 5px; border-bottom: 1px solid var(--card-border); padding-bottom: 15px;">
+                    <span class="primary-label" style="font-size: 11px; margin-bottom: 8px; display: block;">Seleccionar Persona</span>
+                    <div id="face-chips" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
+                </div>
+
                 <!-- Complete class probability bars -->
                 <div class="predictions-list" id="predictions-list">
                     <!-- Default placeholders -->
@@ -707,6 +739,8 @@
         const statusDetection = document.getElementById('status-detection');
         const primaryEmotion = document.getElementById('primary-emotion');
         const predictionsList = document.getElementById('predictions-list');
+        const faceSelectorContainer = document.getElementById('face-selector-container');
+        const faceChips = document.getElementById('face-chips');
 
         // State variables
         let stream = null;
@@ -714,6 +748,8 @@
         let predictionInterval = null;
         let modelList = [];
         let uploadImageObj = null;
+        let activeFaceId = 1;
+        let detectedFaces = [];
 
         // Init App
         window.addEventListener('DOMContentLoaded', () => {
@@ -876,13 +912,8 @@
             capCanvas.height = video.videoHeight;
             const capCtx = capCanvas.getContext('2d');
             
-            // Draw mirrored image since video is mirrored for user friendliness
-            capCtx.translate(capCanvas.width, 0);
-            capCtx.scale(-1, 1);
+            // Capture raw frame from webcam (unmirrored)
             capCtx.drawImage(video, 0, 0, capCanvas.width, capCanvas.height);
-            
-            // Reset transformation
-            capCtx.setTransform(1, 0, 0, 1, 0, 0);
             
             const base64Image = capCanvas.toDataURL('image/jpeg', 0.8);
             
@@ -903,41 +934,27 @@
                 // Clear overlay canvas
                 ctxOverlay.clearRect(0, 0, canvasOverlay.width, canvasOverlay.height);
                 
-                if (data.face_found && data.face_box) {
-                    statusDetection.textContent = "Detección Exitosa";
-                    statusDetection.style.background = "linear-gradient(135deg, #38b000, #007200)";
-                    statusDetection.style.boxShadow = "0 0 10px rgba(56, 176, 0, 0.4)";
-                    
-                    // Draw bounding box (we must adjust X because video element is mirrored in css)
-                    // The CSS mirrors the video using transform: scaleX(-1)
-                    // Canvas overlay is on top, and it is ALSO mirrored if inside the container.
-                    // Wait, let's look at CSS: #webcam-video has scaleX(-1). Canvas overlay does NOT have scaleX(-1).
-                    // Wait! To align them, let's either mirror the canvas too or calculate positions.
-                    // Let's add scaleX(-1) to canvas-overlay CSS! That way, they are perfectly mirrored together.
-                    // Let's check: yes, adding scaleX(-1) in JS/CSS makes it trivial because coordinates are relative to the raw frame, which matches our drawn box!
-                    // Let's make sure canvas-overlay has the mirror transition. Yes:
-                    // In style: #webcam-video is scaleX(-1), but #canvas-overlay is not.
-                    // Let's dynamically mirror our drawing on canvas or apply scaleX(-1) to canvas-overlay!
-                    // Let's add style transformation to canvasOverlay in CSS or dynamically. Let's do it in JS:
+                if (data.face_count > 0 && data.faces && data.faces.length > 0) {
                     canvasOverlay.style.transform = "scaleX(-1)";
                     
-                    const box = data.face_box;
-                    const primaryPred = data.predictions[0];
+                    // Draw boxes and text for all faces
+                    data.faces.forEach(f => {
+                        const box = f.face_box;
+                        ctxOverlay.strokeStyle = f.color;
+                        ctxOverlay.lineWidth = 4;
+                        ctxOverlay.strokeRect(box.x, box.y, box.width, box.height);
+                        
+                        // Draw mini emotion text above face box
+                        ctxOverlay.fillStyle = f.color;
+                        ctxOverlay.font = "bold 16px Inter, sans-serif";
+                        ctxOverlay.fillText(
+                            `P${f.id}: ${f.primary_emotion} ${(f.probability * 100).toFixed(0)}%`,
+                            box.x,
+                            box.y - 10
+                        );
+                    });
                     
-                    ctxOverlay.strokeStyle = primaryPred.color;
-                    ctxOverlay.lineWidth = 4;
-                    ctxOverlay.strokeRect(box.x, box.y, box.width, box.height);
-                    
-                    // Draw mini emotion text above face box
-                    ctxOverlay.fillStyle = primaryPred.color;
-                    ctxOverlay.font = "bold 16px Inter, sans-serif";
-                    ctxOverlay.fillText(
-                        `${primaryPred.emotion} ${(primaryPred.probability * 100).toFixed(0)}%`,
-                        box.x,
-                        box.y - 10
-                    );
-                    
-                    updatePredictionsUI(data.predictions);
+                    renderMultiFaceResults(data.faces);
                 } else {
                     statusDetection.textContent = "Sin Rostro";
                     statusDetection.style.background = "linear-gradient(135deg, #ef476f, #d90429)";
@@ -1038,35 +1055,33 @@
                 // Redraw image to clear any previous drawings
                 ctxUploadPreview.drawImage(uploadImageObj, 0, 0);
                 
-                if (data.face_found && data.face_box) {
-                    statusDetection.textContent = "Detección Exitosa";
-                    statusDetection.style.background = "linear-gradient(135deg, #38b000, #007200)";
-                    statusDetection.style.boxShadow = "0 0 10px rgba(56, 176, 0, 0.4)";
-                    
-                    // Draw box on preview canvas (no mirroring here because uploaded photos are not mirrored)
-                    const box = data.face_box;
-                    const primaryPred = data.predictions[0];
-                    
-                    ctxUploadPreview.strokeStyle = primaryPred.color;
-                    ctxUploadPreview.lineWidth = Math.max(4, Math.round(uploadImageObj.width * 0.006));
-                    ctxUploadPreview.strokeRect(box.x, box.y, box.width, box.height);
-                    
-                    // Draw text above box
-                    ctxUploadPreview.fillStyle = primaryPred.color;
+                const hasRealFaces = data.faces && data.faces.length > 0 && !data.faces[0].is_fallback;
+                
+                if (hasRealFaces) {
+                    const strokeWidth = Math.max(4, Math.round(uploadImageObj.width * 0.006));
                     const fontSize = Math.max(16, Math.round(uploadImageObj.width * 0.025));
-                    ctxUploadPreview.font = `bold ${fontSize}px Inter, sans-serif`;
-                    ctxUploadPreview.fillText(
-                        `${primaryPred.emotion} ${(primaryPred.probability * 100).toFixed(0)}%`,
-                        box.x,
-                        box.y - Math.round(box.height * 0.03)
-                    );
+                    ctxUploadPreview.lineWidth = strokeWidth;
                     
-                    updatePredictionsUI(data.predictions);
+                    data.faces.forEach(f => {
+                        const box = f.face_box;
+                        ctxUploadPreview.strokeStyle = f.color;
+                        ctxUploadPreview.strokeRect(box.x, box.y, box.width, box.height);
+                        
+                        ctxUploadPreview.fillStyle = f.color;
+                        ctxUploadPreview.font = `bold ${fontSize}px Inter, sans-serif`;
+                        ctxUploadPreview.fillText(
+                            `Persona ${f.id}: ${f.primary_emotion} ${(f.probability * 100).toFixed(0)}%`,
+                            box.x,
+                            box.y - Math.round(box.height * 0.03)
+                        );
+                    });
+                    
+                    renderMultiFaceResults(data.faces);
+                } else if (data.faces && data.faces.length > 0) {
+                    renderMultiFaceResults(data.faces);
                 } else {
-                    statusDetection.textContent = "Rostro No Detectado (Inferencia Completa)";
-                    statusDetection.style.background = "linear-gradient(135deg, #e07a5f, #f2cc8f)";
-                    statusDetection.style.boxShadow = "0 0 10px rgba(224, 122, 95, 0.4)";
-                    updatePredictionsUI(data.predictions);
+                    statusDetection.textContent = "Rostro No Detectado";
+                    resetPredictionsUI();
                 }
             } catch (err) {
                 console.error("Upload prediction failed", err);
@@ -1117,12 +1132,57 @@
             });
         }
 
+        function renderMultiFaceResults(faces) {
+            detectedFaces = faces;
+            
+            // Check if activeFaceId is still valid
+            const faceExists = faces.some(f => f.id === activeFaceId);
+            if (!faceExists && faces.length > 0) {
+                activeFaceId = faces[0].id;
+            }
+            
+            // Render chips
+            if (faces.length > 1 && !faces[0].is_fallback) {
+                faceSelectorContainer.classList.remove('hidden');
+                faceChips.innerHTML = '';
+                faces.forEach(f => {
+                    const chip = document.createElement('div');
+                    chip.className = `face-chip ${f.id === activeFaceId ? 'active' : ''}`;
+                    chip.innerHTML = `<i class="fa-solid fa-user"></i> Persona ${f.id} <span style="font-size: 10px; opacity: 0.8; text-transform: capitalize;">(${f.primary_emotion})</span>`;
+                    chip.addEventListener('click', () => {
+                        activeFaceId = f.id;
+                        renderMultiFaceResults(detectedFaces);
+                    });
+                    faceChips.appendChild(chip);
+                });
+            } else {
+                faceSelectorContainer.classList.add('hidden');
+            }
+            
+            // Render active face results
+            const activeFace = faces.find(f => f.id === activeFaceId) || faces[0];
+            if (activeFace) {
+                if (activeFace.is_fallback) {
+                    statusDetection.textContent = "Rostro No Detectado (Inferencia Completa)";
+                    statusDetection.style.background = "linear-gradient(135deg, #e07a5f, #f2cc8f)";
+                    statusDetection.style.boxShadow = "0 0 10px rgba(224, 122, 95, 0.4)";
+                } else {
+                    statusDetection.textContent = faces.length > 1 ? `${faces.length} Rostros Detectados` : "Detección Exitosa";
+                    statusDetection.style.background = "linear-gradient(135deg, #38b000, #007200)";
+                    statusDetection.style.boxShadow = "0 0 10px rgba(56, 176, 0, 0.4)";
+                }
+                updatePredictionsUI(activeFace.predictions);
+            }
+        }
+
         function resetPredictionsUI() {
             primaryEmotion.textContent = "Ninguna";
             primaryEmotion.style.color = "var(--text-secondary)";
             
             const primaryBox = document.querySelector('.primary-result-box');
             primaryBox.style.boxShadow = "";
+            
+            faceSelectorContainer.classList.add('hidden');
             
             predictionsList.innerHTML = `
                 <div class="prediction-item">
