@@ -13,6 +13,8 @@ saved_models/
 # Datasets and compressed files
 dataset/
 *.zip
+!archive (2).zip
+!Archive(2).zip
 *.tar.gz
 *.tgz
 *.rar

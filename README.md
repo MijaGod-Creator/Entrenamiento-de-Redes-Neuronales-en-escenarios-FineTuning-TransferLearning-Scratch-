@@ -2,6 +2,69 @@
 
 Proyecto cientifico reproducible para comparar arquitecturas CNN en RAF-DB.
 
+## 🚀 Guía de Inicio Rápido (Paso a Paso)
+
+Sigue estos pasos para ejecutar el proyecto desde cero y generar tus propios modelos:
+
+### 1. Clonar el repositorio e instalar dependencias
+Abre tu terminal y ejecuta los siguientes comandos:
+```bash
+# Clonar el proyecto
+git clone https://github.com/MijaGod-Creator/ia-con-sin-transfer-learning-fine-tuning.git
+cd ia-con-sin-transfer-learning-fine-tuning
+
+# Crear entorno virtual
+python -m venv .venv
+.venv\Scripts\activate  # En Windows
+
+# Instalar PyTorch con soporte CUDA (GPU)
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+# Instalar dependencias restantes
+pip install -r requirements.txt
+```
+
+### 2. Configurar el Dataset
+El dataset original `archive (2).zip` ya está incluido en el repositorio para facilitar la ejecución. Solo debes correr el script de preparación para extraerlo e iniciar el análisis exploratorio:
+```bash
+python main.py --stage setup
+```
+
+### 3. Crear los Splits de Datos (Preprocesamiento)
+Genera las particiones de entrenamiento, validación y prueba:
+```bash
+python main.py --stage preprocess --validation-size 0.15
+```
+
+### 4. Entrenar tus Modelos
+Puedes entrenar un modelo específico para generar sus pesos. Por ejemplo, entrena una CNN personalizada desde cero (`scratch`):
+```bash
+python main.py --stage train --architecture custom_cnn --scenario scratch --epochs 10
+```
+*(Puedes sustituir `custom_cnn` por otras arquitecturas como `resnet50`, `vgg16`, `mobilenetv2`, etc., y cambiar `--scenario` a `transfer` o `fine_tuning`).*
+
+Para ejecutar la búsqueda completa de todos los modelos (esto puede tardar varias horas):
+```bash
+python main.py --stage train-grid --architecture all --scenario all --epochs 30
+```
+
+### 5. Evaluar los Modelos y Comparar
+Una vez que entrenes uno o más modelos, evalúa sus métricas:
+```bash
+python main.py --stage evaluate --architecture custom_cnn --scenario scratch
+```
+Luego genera la tabla comparativa con:
+```bash
+python main.py --stage compare
+```
+
+### 6. Levantar la Aplicación Web
+Para probar los modelos con imágenes en tiempo real, inicia el servidor local Flask:
+```bash
+python app.py
+```
+Abre en tu navegador `http://127.0.0.1:5000/`. El servidor cargará automáticamente el modelo entrenado con el mejor F1-Score que esté guardado en tu carpeta `saved_models/`.
+
 ## Estructura
 
 ```text
