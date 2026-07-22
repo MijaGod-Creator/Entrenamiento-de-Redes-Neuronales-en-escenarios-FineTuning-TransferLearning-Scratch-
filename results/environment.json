@@ -1,0 +1,11 @@
+{
+  "python": "3.11.9",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "torch": "2.6.0+cu124",
+  "cuda_available": true,
+  "cuda_version": "12.4",
+  "cudnn_version": 90100,
+  "gpus": [
+    "NVIDIA GeForce RTX 3050 Laptop GPU"
+  ]
+}

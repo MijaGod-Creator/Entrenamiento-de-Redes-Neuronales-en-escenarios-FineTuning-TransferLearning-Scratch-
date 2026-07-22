@@ -1,0 +1,20 @@
+{
+  "experiment_name": "vgg16_transfer_noaug",
+  "accuracy": 0.6245110821382008,
+  "balanced_accuracy": 0.5949795876880815,
+  "precision_macro": 0.5257938822931391,
+  "recall_macro": 0.5949795876880815,
+  "f1_macro": 0.5383805526288513,
+  "precision_weighted": 0.6872313918070557,
+  "recall_weighted": 0.6245110821382008,
+  "f1_weighted": 0.644970850757739,
+  "specificity_macro": 0.9368444002752054,
+  "top_2_accuracy": 0.788787483702738,
+  "top_3_accuracy": 0.8836375488917861,
+  "mcc": 0.5312038637649076,
+  "cohen_kappa": 0.5264398698114823,
+  "auc_macro_ovr": 0.8913816415689206,
+  "inference_total_seconds": 26.268580300267786,
+  "inference_ms_per_image": 8.56211874193865,
+  "num_parameters": 21139783
+}

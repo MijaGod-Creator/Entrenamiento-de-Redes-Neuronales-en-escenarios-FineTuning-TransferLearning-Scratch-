@@ -1,0 +1,20 @@
+{
+  "experiment_name": "densenet121_transfer_noaug",
+  "accuracy": 0.4726205997392438,
+  "balanced_accuracy": 0.4660914249211932,
+  "precision_macro": 0.40087475218156843,
+  "recall_macro": 0.4660914249211932,
+  "f1_macro": 0.39801713761358387,
+  "precision_weighted": 0.57290326290862,
+  "recall_weighted": 0.4726205997392438,
+  "f1_weighted": 0.49533820299439296,
+  "specificity_macro": 0.9113123577081382,
+  "top_2_accuracy": 0.6613428943937418,
+  "top_3_accuracy": 0.7894393741851369,
+  "mcc": 0.3606589156360994,
+  "cohen_kappa": 0.3514782670496114,
+  "auc_macro_ovr": 0.8222602431880291,
+  "inference_total_seconds": 18.038802600000054,
+  "inference_ms_per_image": 5.879661864406797,
+  "num_parameters": 7218567
+}

@@ -1,0 +1,20 @@
+{
+  "experiment_name": "mobilenetv2_scratch_aug",
+  "accuracy": 0.6890482398956975,
+  "balanced_accuracy": 0.6722780044367028,
+  "precision_macro": 0.5907597293118647,
+  "recall_macro": 0.6722780044367028,
+  "f1_macro": 0.6006777527269732,
+  "precision_weighted": 0.7544866957949942,
+  "recall_weighted": 0.6890482398956975,
+  "f1_weighted": 0.7054980097227055,
+  "specificity_macro": 0.9487276348618623,
+  "top_2_accuracy": 0.8484354628422425,
+  "top_3_accuracy": 0.9191655801825294,
+  "mcc": 0.6124448137879988,
+  "cohen_kappa": 0.606308115639909,
+  "auc_macro_ovr": 0.9302423130541291,
+  "inference_total_seconds": 11.008195200003684,
+  "inference_ms_per_image": 3.588068839636142,
+  "num_parameters": 2554119
+}

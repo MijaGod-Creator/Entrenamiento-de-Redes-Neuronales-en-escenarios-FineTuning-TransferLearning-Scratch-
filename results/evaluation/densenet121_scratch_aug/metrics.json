@@ -1,0 +1,20 @@
+{
+  "experiment_name": "densenet121_scratch_aug",
+  "accuracy": 0.6029986962190352,
+  "balanced_accuracy": 0.617878383706573,
+  "precision_macro": 0.534770002832088,
+  "recall_macro": 0.617878383706573,
+  "f1_macro": 0.5437574548139618,
+  "precision_weighted": 0.7127087125579868,
+  "recall_weighted": 0.6029986962190352,
+  "f1_weighted": 0.6306501091656577,
+  "specificity_macro": 0.9355766726243656,
+  "top_2_accuracy": 0.7894393741851369,
+  "top_3_accuracy": 0.8872229465449805,
+  "mcc": 0.5245865471380928,
+  "cohen_kappa": 0.512363415850932,
+  "auc_macro_ovr": 0.9096557390122079,
+  "inference_total_seconds": 17.363354800269008,
+  "inference_ms_per_image": 5.659502868405804,
+  "num_parameters": 7218567
+}

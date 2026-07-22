@@ -1,0 +1,20 @@
+{
+  "experiment_name": "resnet50_fine_tuning_noaug",
+  "accuracy": 0.5873533246414603,
+  "balanced_accuracy": 0.5371213221658285,
+  "precision_macro": 0.4904286591959802,
+  "recall_macro": 0.5371213221658285,
+  "f1_macro": 0.5048233576818101,
+  "precision_weighted": 0.6328150217103934,
+  "recall_weighted": 0.5873533246414603,
+  "f1_weighted": 0.6031640299750168,
+  "specificity_macro": 0.9291336261671803,
+  "top_2_accuracy": 0.7633637548891786,
+  "top_3_accuracy": 0.8595176010430248,
+  "mcc": 0.479913845615882,
+  "cohen_kappa": 0.47671410308417783,
+  "auc_macro_ovr": 0.8489150622223169,
+  "inference_total_seconds": 16.247422999702394,
+  "inference_ms_per_image": 5.295770208507951,
+  "num_parameters": 24034887
+}

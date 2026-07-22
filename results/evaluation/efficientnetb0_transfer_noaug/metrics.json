@@ -1,0 +1,20 @@
+{
+  "experiment_name": "efficientnetb0_transfer_noaug",
+  "accuracy": 0.4559973924380704,
+  "balanced_accuracy": 0.4576837630732376,
+  "precision_macro": 0.39944512129749243,
+  "recall_macro": 0.4576837630732376,
+  "f1_macro": 0.38773345025770534,
+  "precision_weighted": 0.5775971523952852,
+  "recall_weighted": 0.4559973924380704,
+  "f1_weighted": 0.48862582907525126,
+  "specificity_macro": 0.9100064760250278,
+  "top_2_accuracy": 0.6499348109517601,
+  "top_3_accuracy": 0.7868318122555411,
+  "mcc": 0.34817622833053813,
+  "cohen_kappa": 0.3383147073467534,
+  "auc_macro_ovr": 0.803171930739034,
+  "inference_total_seconds": 11.471465399954468,
+  "inference_ms_per_image": 3.739069556699631,
+  "num_parameters": 4337795
+}

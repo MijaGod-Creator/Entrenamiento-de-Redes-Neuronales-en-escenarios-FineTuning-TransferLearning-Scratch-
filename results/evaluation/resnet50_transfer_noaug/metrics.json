@@ -1,0 +1,20 @@
+{
+  "experiment_name": "resnet50_transfer_noaug",
+  "accuracy": 0.4178617992177314,
+  "balanced_accuracy": 0.4345763930174395,
+  "precision_macro": 0.37608530833144754,
+  "recall_macro": 0.4345763930174395,
+  "f1_macro": 0.35581529508584187,
+  "precision_weighted": 0.5514507259612155,
+  "recall_weighted": 0.4178617992177314,
+  "f1_weighted": 0.4541963920018414,
+  "specificity_macro": 0.9043282452650708,
+  "top_2_accuracy": 0.6183181225554107,
+  "top_3_accuracy": 0.7516297262059974,
+  "mcc": 0.30913901567541513,
+  "cohen_kappa": 0.2981458937910908,
+  "auc_macro_ovr": 0.7888740116139713,
+  "inference_total_seconds": 16.2533809999004,
+  "inference_ms_per_image": 5.297712190319556,
+  "num_parameters": 24034887
+}

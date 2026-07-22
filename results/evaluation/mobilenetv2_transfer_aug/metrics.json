@@ -1,0 +1,20 @@
+{
+  "experiment_name": "mobilenetv2_transfer_aug",
+  "accuracy": 0.39113428943937417,
+  "balanced_accuracy": 0.4223553019733459,
+  "precision_macro": 0.35126379006433056,
+  "recall_macro": 0.4223553019733459,
+  "f1_macro": 0.34176919456287724,
+  "precision_weighted": 0.5290321231109664,
+  "recall_weighted": 0.39113428943937417,
+  "f1_weighted": 0.41485287180178054,
+  "specificity_macro": 0.8997435169999736,
+  "top_2_accuracy": 0.5948500651890483,
+  "top_3_accuracy": 0.734354628422425,
+  "mcc": 0.2840737953319375,
+  "cohen_kappa": 0.2724699649159599,
+  "auc_macro_ovr": 0.7700848906700817,
+  "inference_total_seconds": 10.640044300351292,
+  "inference_ms_per_image": 3.468071805851138,
+  "num_parameters": 2554119
+}

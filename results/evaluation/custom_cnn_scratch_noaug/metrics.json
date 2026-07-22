@@ -1,0 +1,20 @@
+{
+  "experiment_name": "custom_cnn_scratch_noaug",
+  "accuracy": 0.5912646675358539,
+  "balanced_accuracy": 0.5252972799215873,
+  "precision_macro": 0.4898816599613485,
+  "recall_macro": 0.5252972799215873,
+  "f1_macro": 0.48913318222870245,
+  "precision_weighted": 0.6407639523710599,
+  "recall_weighted": 0.5912646675358539,
+  "f1_weighted": 0.6096265656810076,
+  "specificity_macro": 0.9295655276516356,
+  "top_2_accuracy": 0.7728161668839635,
+  "top_3_accuracy": 0.863102998696219,
+  "mcc": 0.48052676057022936,
+  "cohen_kappa": 0.4776348620337998,
+  "auc_macro_ovr": 0.8612790372921691,
+  "inference_total_seconds": 18.69433550024405,
+  "inference_ms_per_image": 6.09332969369102,
+  "num_parameters": 1309415
+}

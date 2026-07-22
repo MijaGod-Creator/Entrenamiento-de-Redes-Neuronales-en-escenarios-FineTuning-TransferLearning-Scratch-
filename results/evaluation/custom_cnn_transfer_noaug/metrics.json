@@ -1,0 +1,20 @@
+{
+  "experiment_name": "custom_cnn_transfer_noaug",
+  "accuracy": 0.2503259452411995,
+  "balanced_accuracy": 0.26718711427632963,
+  "precision_macro": 0.21897066941103263,
+  "recall_macro": 0.26718711427632963,
+  "f1_macro": 0.20367880374176808,
+  "precision_weighted": 0.33613262755037104,
+  "recall_weighted": 0.2503259452411995,
+  "f1_weighted": 0.2704334584191066,
+  "specificity_macro": 0.8727143544753015,
+  "top_2_accuracy": 0.4335071707953064,
+  "top_3_accuracy": 0.5935462842242504,
+  "mcc": 0.10065076762141667,
+  "cohen_kappa": 0.09610963609587098,
+  "auc_macro_ovr": 0.6272653626404916,
+  "inference_total_seconds": 17.617519200313836,
+  "inference_ms_per_image": 5.742346545082737,
+  "num_parameters": 1309415
+}

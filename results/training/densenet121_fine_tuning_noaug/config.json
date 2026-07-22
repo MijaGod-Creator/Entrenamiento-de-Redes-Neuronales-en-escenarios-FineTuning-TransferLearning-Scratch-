@@ -1,0 +1,32 @@
+{
+  "architecture": "densenet121",
+  "scenario": "fine_tuning",
+  "image_size": [
+    224,
+    224
+  ],
+  "num_classes": 7,
+  "batch_size": 32,
+  "epochs": 30,
+  "learning_rate": 0.001,
+  "fine_tuning_learning_rate": 1e-05,
+  "optimizer": "adam",
+  "dropout": 0.35,
+  "dense_units": 256,
+  "weight_decay": 0.0,
+  "validation_size": 0.15,
+  "use_augmentation": false,
+  "use_mixup": false,
+  "use_cutmix": false,
+  "class_weight": true,
+  "patience": 8,
+  "reduce_lr_patience": 4,
+  "fine_tune_at": -30,
+  "seed": 42,
+  "input_shape": [
+    224,
+    224,
+    3
+  ],
+  "experiment_name": "densenet121_fine_tuning_noaug"
+}

@@ -1,0 +1,47 @@
+{
+  "total_zip_entries": 15341,
+  "total_images": 15339,
+  "train_images": 12271,
+  "test_images": 3068,
+  "unknown_split_images": 0,
+  "num_classes": 7,
+  "classes": {
+    "1": "surprise",
+    "2": "fear",
+    "3": "disgust",
+    "4": "happiness",
+    "5": "sadness",
+    "6": "anger",
+    "7": "neutral"
+  },
+  "images_by_class": {
+    "1_surprise": 1619,
+    "2_fear": 355,
+    "3_disgust": 877,
+    "4_happiness": 5957,
+    "5_sadness": 2460,
+    "6_anger": 867,
+    "7_neutral": 3204
+  },
+  "image_formats": {
+    ".jpg": 15339
+  },
+  "resolution_average": {
+    "width": 100.0,
+    "height": 100.0
+  },
+  "resolution_min": {
+    "width": 100,
+    "height": 100
+  },
+  "resolution_max": {
+    "width": 100,
+    "height": 100
+  },
+  "damaged_images": 0,
+  "null_labels": 0,
+  "duplicate_images": 6,
+  "label_mismatches": 0,
+  "imbalance_ratio_max_min": 16.7803,
+  "is_imbalanced": true
+}

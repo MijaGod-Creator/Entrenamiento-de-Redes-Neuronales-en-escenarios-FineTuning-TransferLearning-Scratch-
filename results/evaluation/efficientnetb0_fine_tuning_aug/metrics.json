@@ -1,0 +1,20 @@
+{
+  "experiment_name": "efficientnetb0_fine_tuning_aug",
+  "accuracy": 0.6659061277705346,
+  "balanced_accuracy": 0.670478297876189,
+  "precision_macro": 0.579328040350866,
+  "recall_macro": 0.670478297876189,
+  "f1_macro": 0.6040895289494135,
+  "precision_weighted": 0.734207093879932,
+  "recall_weighted": 0.6659061277705346,
+  "f1_weighted": 0.6788708777808787,
+  "specificity_macro": 0.9446483580259369,
+  "top_2_accuracy": 0.833767926988266,
+  "top_3_accuracy": 0.9051499348109517,
+  "mcc": 0.5924606383327132,
+  "cohen_kappa": 0.5829669856046893,
+  "auc_macro_ovr": 0.922747073749263,
+  "inference_total_seconds": 12.034760000184178,
+  "inference_ms_per_image": 3.922672751037868,
+  "num_parameters": 4337795
+}

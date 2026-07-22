@@ -1,0 +1,20 @@
+{
+  "experiment_name": "vgg16_fine_tuning_aug",
+  "accuracy": 0.758148631029987,
+  "balanced_accuracy": 0.7273510902404586,
+  "precision_macro": 0.6529592521060146,
+  "recall_macro": 0.7273510902404586,
+  "f1_macro": 0.6805044895323402,
+  "precision_weighted": 0.7940223109951007,
+  "recall_weighted": 0.758148631029987,
+  "f1_weighted": 0.7673373958147501,
+  "specificity_macro": 0.959892780250853,
+  "top_2_accuracy": 0.9015645371577575,
+  "top_3_accuracy": 0.9511082138200783,
+  "mcc": 0.6969141079835205,
+  "cohen_kappa": 0.6922252000574867,
+  "auc_macro_ovr": 0.9516821300920816,
+  "inference_total_seconds": 25.95941670006141,
+  "inference_ms_per_image": 8.461348337699286,
+  "num_parameters": 21139783
+}

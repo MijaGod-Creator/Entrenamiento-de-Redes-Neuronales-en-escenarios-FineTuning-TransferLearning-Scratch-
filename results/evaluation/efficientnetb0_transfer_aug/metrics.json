@@ -1,0 +1,20 @@
+{
+  "experiment_name": "efficientnetb0_transfer_aug",
+  "accuracy": 0.3624511082138201,
+  "balanced_accuracy": 0.41293124971612344,
+  "precision_macro": 0.35395063535018145,
+  "recall_macro": 0.41293124971612344,
+  "f1_macro": 0.3235836382226749,
+  "precision_weighted": 0.5477637931884098,
+  "recall_weighted": 0.3624511082138201,
+  "f1_weighted": 0.37041924865740733,
+  "specificity_macro": 0.8954504454154977,
+  "top_2_accuracy": 0.5697522816166884,
+  "top_3_accuracy": 0.7089308996088657,
+  "mcc": 0.2635599349946482,
+  "cohen_kappa": 0.2476006252893117,
+  "auc_macro_ovr": 0.7679937122036921,
+  "inference_total_seconds": 11.002598800230771,
+  "inference_ms_per_image": 3.5862447197623117,
+  "num_parameters": 4337795
+}

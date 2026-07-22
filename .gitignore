@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Trained models and large weights
+saved_models/
+*.pt
+*.pth
+*.h5
+*.ckpt
+
+# Datasets and compressed files
+dataset/
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+
+# Virtual environments
+venv/
+.venv/
+env/
+venv.bak/
+.env
+
+# IDE and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db

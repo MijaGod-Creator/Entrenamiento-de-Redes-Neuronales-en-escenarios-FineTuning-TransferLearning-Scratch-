@@ -1,0 +1,20 @@
+{
+  "experiment_name": "resnet50_scratch_aug",
+  "accuracy": 0.4491525423728814,
+  "balanced_accuracy": 0.4543529280691438,
+  "precision_macro": 0.39374509566975696,
+  "recall_macro": 0.4543529280691438,
+  "f1_macro": 0.3721530342942617,
+  "precision_weighted": 0.5948986702311608,
+  "recall_weighted": 0.4491525423728814,
+  "f1_weighted": 0.48094551859049234,
+  "specificity_macro": 0.9115539134962436,
+  "top_2_accuracy": 0.6271186440677966,
+  "top_3_accuracy": 0.7750977835723598,
+  "mcc": 0.35295964685722403,
+  "cohen_kappa": 0.33736094589254584,
+  "auc_macro_ovr": 0.8110730995944427,
+  "inference_total_seconds": 16.34766810014844,
+  "inference_ms_per_image": 5.3284446219519035,
+  "num_parameters": 24034887
+}

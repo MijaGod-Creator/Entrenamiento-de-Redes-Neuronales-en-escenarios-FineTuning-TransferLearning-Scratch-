@@ -1,0 +1,20 @@
+{
+  "experiment_name": "mobilenetv2_fine_tuning_noaug",
+  "accuracy": 0.5941981747066493,
+  "balanced_accuracy": 0.5583650858533168,
+  "precision_macro": 0.5038060883436871,
+  "recall_macro": 0.5583650858533168,
+  "f1_macro": 0.5209256330653265,
+  "precision_weighted": 0.6393525610904481,
+  "recall_weighted": 0.5941981747066493,
+  "f1_weighted": 0.6079714117031114,
+  "specificity_macro": 0.9303871180132963,
+  "top_2_accuracy": 0.7855280312907431,
+  "top_3_accuracy": 0.8911342894393742,
+  "mcc": 0.49080308921650784,
+  "cohen_kappa": 0.4868545832733826,
+  "auc_macro_ovr": 0.866921433043861,
+  "inference_total_seconds": 10.831352999899536,
+  "inference_ms_per_image": 3.5304279660689493,
+  "num_parameters": 2554119
+}

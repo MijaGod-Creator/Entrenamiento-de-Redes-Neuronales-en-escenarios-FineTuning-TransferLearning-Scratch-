@@ -1,0 +1,15 @@
+python-dotenv
+torch
+torchvision
+torchaudio
+opencv-python
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+albumentations
+tensorboard
+openpyxl
+tabulate
+pillow

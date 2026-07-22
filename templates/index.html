@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Face Emotion Recognition - RAF-DB</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent-primary: #8a2be2;
+            --accent-secondary: #4a00e0;
+            --glow-color: rgba(138, 43, 226, 0.4);
+            --success: #38b000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(138, 43, 226, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(74, 0, 224, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 320px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            background: linear-gradient(135deg, #8a2be2, #4a00e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .select-custom {
+            width: 100%;
+            background: rgba(31, 41, 55, 0.8);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .select-custom:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+
+        /* Metrics Card */
+        .metrics-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-recommended {
+            background: linear-gradient(135deg, #ffb703, #fb8500);
+            color: #0b0f19;
+            box-shadow: 0 0 8px rgba(251, 133, 0, 0.3);
+        }
+
+        /* Main Area Styling */
+        .main-content {
+            margin-left: 320px;
+            flex: 1;
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .header-app {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .header-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 32px;
+            background: linear-gradient(to right, #fff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* Tabs Navigation */
+        .tabs-nav {
+            display: flex;
+            gap: 15px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 10px 15px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            border-radius: 3px 3px 0 0;
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+
+        /* Panels Container */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 25px;
+            min-height: 480px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: border-color 0.3s ease;
+        }
+
+        .panel.drag-over {
+            border-color: var(--accent-primary);
+            background: rgba(138, 43, 226, 0.05);
+        }
+
+        .viewport-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 640px;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background: #06090e;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        #webcam-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform: scaleX(-1); /* mirror effect */
+        }
+
+        #canvas-overlay {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 2;
+        }
+
+        .camera-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #ef476f, #d90429);
+            box-shadow: 0 4px 15px rgba(239, 71, 111, 0.3);
+        }
+
+        .btn-stop:hover {
+            box-shadow: 0 6px 20px rgba(239, 71, 111, 0.5);
+        }
+
+        /* Upload Panel Specifics */
+        .upload-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            padding: 40px;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .upload-icon {
+            font-size: 64px;
+            color: var(--accent-primary);
+            filter: drop-shadow(0 0 10px var(--glow-color));
+            animation: bounce 2s infinite;
+        }
+
+        .upload-placeholder p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .results-header {
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .primary-result-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .primary-result-box::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-primary);
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+
+        .primary-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .primary-emotion {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            text-transform: uppercase;
+        }
+
+        /* Probability Bars */
+        .predictions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .prediction-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .prediction-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .prediction-name {
+            text-transform: capitalize;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #fff;
+            filter: blur(1px);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Pulse for Camera */
+        .pulse-recording {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(239, 71, 111, 0.15);
+            border: 1px solid rgba(239, 71, 111, 0.3);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ef476f;
+            z-index: 3;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #ef476f;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.5; }
+            100% { transform: scale(0.9); opacity: 1; }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <i class="fa-solid fa-face-smile-wink logo-icon"></i>
+            <span class="logo-text">FER Emotion AI</span>
+        </div>
+        
+        <!-- Model Selection Group -->
+        <div class="form-group">
+            <h3 class="section-title">Modelo Seleccionado</h3>
+            <select id="model-select" class="select-custom">
+                <!-- Loaded dynamically -->
+            </select>
+        </div>
+
+        <!-- Model Metrics Group -->
+        <div class="form-group">
+            <h3 class="section-title">Métricas de Entrenamiento</h3>
+            <div class="metrics-card">
+                <div class="metric-row">
+                    <span class="metric-label">Arquitectura</span>
+                    <span id="metric-architecture" class="metric-value">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Precisión (F1-Score)</span>
+                    <span id="metric-f1" class="metric-value">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Exactitud (Accuracy)</span>
+                    <span id="metric-accuracy" class="metric-value">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Inferencia</span>
+                    <span id="metric-inference" class="metric-value">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Parámetros</span>
+                    <span id="metric-params" class="metric-value">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: auto; border-top: 1px solid var(--card-border); padding-top: 20px;">
+            <p style="font-size: 11px; color: var(--text-secondary); text-align: center;">
+                Desarrollado para entrenamiento con RAF-DB dataset.
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="header-app">
+            <h1 class="header-title">Clasificador de Emociones Faciales</h1>
+            <p class="header-subtitle">Detección y clasificación multicapa de expresiones faciales en tiempo real.</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tabs-nav">
+            <button id="btn-tab-webcam" class="tab-btn active"><i class="fa-solid fa-camera" style="margin-right: 8px;"></i>Cámara en Tiempo Real</button>
+            <button id="btn-tab-upload" class="tab-btn"><i class="fa-solid fa-cloud-arrow-up" style="margin-right: 8px;"></i>Subir Fotografía</button>
+        </div>
+
+        <!-- Workspace Grid -->
+        <div class="workspace-grid">
+            
+            <!-- Tab Panels -->
+            <div>
+                <!-- Webcam Panel -->
+                <div id="panel-webcam" class="panel">
+                    <div id="recording-indicator" class="pulse-recording hidden">
+                        <div class="pulse-dot"></div>
+                        En vivo
+                    </div>
+                    <div class="viewport-wrapper">
+                        <video id="webcam-video" autoplay playsinline></video>
+                        <canvas id="canvas-overlay"></canvas>
+                    </div>
+                    <div class="camera-controls">
+                        <button id="btn-camera-toggle" class="btn"><i class="fa-solid fa-play"></i>Iniciar Cámara</button>
+                    </div>
+                </div>
+
+                <!-- Upload Panel -->
+                <div id="panel-upload" class="panel hidden">
+                    <input type="file" id="file-input" class="hidden" accept="image/*">
+                    <div id="drop-zone" class="upload-placeholder">
+                        <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 18px; margin-bottom: 5px;">Arrastra tu foto aquí</h3>
+                        <p>o haz clic para explorar tu equipo</p>
+                    </div>
+                    <div id="preview-wrapper" class="viewport-wrapper hidden">
+                        <canvas id="canvas-upload-preview" style="width:100%; height:100%; object-fit:contain;"></canvas>
+                    </div>
+                    <div id="upload-controls" class="camera-controls hidden">
+                        <button id="btn-clear-upload" class="btn btn-stop"><i class="fa-solid fa-trash"></i>Quitar Imagen</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="results-panel">
+                <div class="results-header">
+                    <h3 class="results-title">Resultados del Análisis</h3>
+                    <span id="status-detection" class="badge">Esperando Entrada</span>
+                </div>
+
+                <!-- Box display for top class -->
+                <div class="primary-result-box">
+                    <span class="primary-label">Emoción Predominante</span>
+                    <span id="primary-emotion" class="primary-emotion" style="color: var(--text-secondary);">Ninguna</span>
+                </div>
+
+                <!-- Complete class probability bars -->
+                <div class="predictions-list" id="predictions-list">
+                    <!-- Default placeholders -->
+                    <div class="prediction-item">
+                        <div class="prediction-meta">
+                            <span class="prediction-name">felicidad</span>
+                            <span class="prediction-prob">0.0%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 0%; background: #FFD166;"></div>
+                        </div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-meta">
+                            <span class="prediction-name">neutral</span>
+                            <span class="prediction-prob">0.0%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 0%; background: #6C757D;"></div>
+                        </div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-meta">
+                            <span class="prediction-name">sorpresa</span>
+                            <span class="prediction-prob">0.0%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 0%; background: #C77DFF;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const modelSelect = document.getElementById('model-select');
+        const metricArch = document.getElementById('metric-architecture');
+        const metricF1 = document.getElementById('metric-f1');
+        const metricAccuracy = document.getElementById('metric-accuracy');
+        const metricInference = document.getElementById('metric-inference');
+        const metricParams = document.getElementById('metric-params');
+
+        const tabWebcam = document.getElementById('btn-tab-webcam');
+        const tabUpload = document.getElementById('btn-tab-upload');
+        const panelWebcam = document.getElementById('panel-webcam');
+        const panelUpload = document.getElementById('panel-upload');
+
+        const video = document.getElementById('webcam-video');
+        const canvasOverlay = document.getElementById('canvas-overlay');
+        const ctxOverlay = canvasOverlay.getContext('2d');
+        const btnCameraToggle = document.getElementById('btn-camera-toggle');
+        const recordingIndicator = document.getElementById('recording-indicator');
+
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        const previewWrapper = document.getElementById('preview-wrapper');
+        const uploadControls = document.getElementById('upload-controls');
+        const btnClearUpload = document.getElementById('btn-clear-upload');
+        const canvasUploadPreview = document.getElementById('canvas-upload-preview');
+        const ctxUploadPreview = canvasUploadPreview.getContext('2d');
+
+        const statusDetection = document.getElementById('status-detection');
+        const primaryEmotion = document.getElementById('primary-emotion');
+        const predictionsList = document.getElementById('predictions-list');
+
+        // State variables
+        let stream = null;
+        let isCameraRunning = false;
+        let predictionInterval = null;
+        let modelList = [];
+        let uploadImageObj = null;
+
+        // Init App
+        window.addEventListener('DOMContentLoaded', () => {
+            loadModels();
+            setupTabs();
+            setupWebcam();
+            setupUpload();
+        });
+
+        // Load models list from Flask API
+        async function loadModels() {
+            try {
+                const response = await fetch('/api/models');
+                modelList = await response.json();
+                
+                modelSelect.innerHTML = '';
+                modelList.forEach(m => {
+                    const option = document.createElement('option');
+                    option.value = m.name;
+                    option.selected = m.is_current;
+                    
+                    let suffix = '';
+                    if (m.is_recommended) suffix += ' [🏆 MEJOR]';
+                    option.textContent = m.name + suffix;
+                    modelSelect.appendChild(option);
+                });
+
+                const current = modelList.find(m => m.is_current) || modelList[0];
+                if (current) {
+                    updateMetricsUI(current);
+                }
+            } catch (e) {
+                console.error("Error loading models list", e);
+            }
+        }
+
+        // Change model selection
+        modelSelect.addEventListener('change', async (e) => {
+            const selectedName = e.target.value;
+            const modelInfo = modelList.find(m => m.name === selectedName);
+            
+            if (modelInfo) {
+                updateMetricsUI(modelInfo);
+            }
+
+            try {
+                const response = await fetch('/api/select_model', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model_name: selectedName })
+                });
+                const result = await response.json();
+                console.log("Model updated in backend:", result);
+            } catch (err) {
+                console.error("Error updating model", err);
+            }
+        });
+
+        function updateMetricsUI(model) {
+            const parts = model.name.split('_');
+            const arch = parts[0].toUpperCase();
+            metricArch.textContent = arch;
+            metricF1.textContent = (model.metrics.f1_macro * 100).toFixed(2) + '%';
+            metricAccuracy.textContent = (model.metrics.accuracy * 100).toFixed(2) + '%';
+            metricInference.textContent = model.metrics.inference_ms.toFixed(2) + ' ms';
+            
+            // Format parameters count
+            const params = model.metrics.num_parameters;
+            if (params >= 1000000) {
+                metricParams.textContent = (params / 1000000).toFixed(2) + ' M';
+            } else {
+                metricParams.textContent = (params / 1000).toFixed(0) + ' K';
+            }
+        }
+
+        // Setup Panel Switching
+        function setupTabs() {
+            tabWebcam.addEventListener('click', () => {
+                tabWebcam.classList.add('active');
+                tabUpload.classList.remove('active');
+                panelWebcam.classList.remove('hidden');
+                panelUpload.classList.add('hidden');
+                
+                // Stop webcam in upload tab if needed
+                if (!isCameraRunning) {
+                    // Do nothing
+                }
+            });
+
+            tabUpload.addEventListener('click', () => {
+                tabUpload.classList.add('active');
+                tabWebcam.classList.remove('active');
+                panelUpload.classList.remove('hidden');
+                panelWebcam.classList.add('hidden');
+                
+                // Stop webcam if it's running when switching to upload
+                if (isCameraRunning) {
+                    toggleCamera();
+                }
+            });
+        }
+
+        // Webcam Management
+        function setupWebcam() {
+            btnCameraToggle.addEventListener('click', toggleCamera);
+        }
+
+        async function toggleCamera() {
+            if (isCameraRunning) {
+                // Stop Camera
+                isCameraRunning = false;
+                clearInterval(predictionInterval);
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                video.srcObject = null;
+                btnCameraToggle.innerHTML = '<i class="fa-solid fa-play"></i>Iniciar Cámara';
+                btnCameraToggle.classList.remove('btn-stop');
+                recordingIndicator.classList.add('hidden');
+                statusDetection.textContent = "Cámara Inactiva";
+                statusDetection.style.background = "";
+                statusDetection.style.boxShadow = "";
+                ctxOverlay.clearRect(0, 0, canvasOverlay.width, canvasOverlay.height);
+                resetPredictionsUI();
+            } else {
+                // Start Camera
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: { width: 640, height: 480, facingMode: "user" },
+                        audio: false
+                    });
+                    video.srcObject = stream;
+                    isCameraRunning = true;
+                    btnCameraToggle.innerHTML = '<i class="fa-solid fa-stop"></i>Detener Cámara';
+                    btnCameraToggle.classList.add('btn-stop');
+                    recordingIndicator.classList.remove('hidden');
+                    statusDetection.textContent = "Buscando Rostro...";
+                    
+                    // Match canvas dimensions to video once it loads
+                    video.onloadedmetadata = () => {
+                        canvasOverlay.width = video.videoWidth;
+                        canvasOverlay.height = video.videoHeight;
+                    };
+                    
+                    // Start periodic classification
+                    predictionInterval = setInterval(captureAndPredict, 300);
+                } catch (e) {
+                    console.error("Camera access failed", e);
+                    alert("No se pudo acceder a la cámara web. Asegúrate de otorgar permisos.");
+                }
+            }
+        }
+
+        async function captureAndPredict() {
+            if (!isCameraRunning) return;
+            
+            // Create offscreen canvas to capture frame
+            const capCanvas = document.createElement('canvas');
+            capCanvas.width = video.videoWidth;
+            capCanvas.height = video.videoHeight;
+            const capCtx = capCanvas.getContext('2d');
+            
+            // Draw mirrored image since video is mirrored for user friendliness
+            capCtx.translate(capCanvas.width, 0);
+            capCtx.scale(-1, 1);
+            capCtx.drawImage(video, 0, 0, capCanvas.width, capCanvas.height);
+            
+            // Reset transformation
+            capCtx.setTransform(1, 0, 0, 1, 0, 0);
+            
+            const base64Image = capCanvas.toDataURL('image/jpeg', 0.8);
+            
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: base64Image })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error(data.error);
+                    return;
+                }
+                
+                // Clear overlay canvas
+                ctxOverlay.clearRect(0, 0, canvasOverlay.width, canvasOverlay.height);
+                
+                if (data.face_found && data.face_box) {
+                    statusDetection.textContent = "Detección Exitosa";
+                    statusDetection.style.background = "linear-gradient(135deg, #38b000, #007200)";
+                    statusDetection.style.boxShadow = "0 0 10px rgba(56, 176, 0, 0.4)";
+                    
+                    // Draw bounding box (we must adjust X because video element is mirrored in css)
+                    // The CSS mirrors the video using transform: scaleX(-1)
+                    // Canvas overlay is on top, and it is ALSO mirrored if inside the container.
+                    // Wait, let's look at CSS: #webcam-video has scaleX(-1). Canvas overlay does NOT have scaleX(-1).
+                    // Wait! To align them, let's either mirror the canvas too or calculate positions.
+                    // Let's add scaleX(-1) to canvas-overlay CSS! That way, they are perfectly mirrored together.
+                    // Let's check: yes, adding scaleX(-1) in JS/CSS makes it trivial because coordinates are relative to the raw frame, which matches our drawn box!
+                    // Let's make sure canvas-overlay has the mirror transition. Yes:
+                    // In style: #webcam-video is scaleX(-1), but #canvas-overlay is not.
+                    // Let's dynamically mirror our drawing on canvas or apply scaleX(-1) to canvas-overlay!
+                    // Let's add style transformation to canvasOverlay in CSS or dynamically. Let's do it in JS:
+                    canvasOverlay.style.transform = "scaleX(-1)";
+                    
+                    const box = data.face_box;
+                    const primaryPred = data.predictions[0];
+                    
+                    ctxOverlay.strokeStyle = primaryPred.color;
+                    ctxOverlay.lineWidth = 4;
+                    ctxOverlay.strokeRect(box.x, box.y, box.width, box.height);
+                    
+                    // Draw mini emotion text above face box
+                    ctxOverlay.fillStyle = primaryPred.color;
+                    ctxOverlay.font = "bold 16px Inter, sans-serif";
+                    ctxOverlay.fillText(
+                        `${primaryPred.emotion} ${(primaryPred.probability * 100).toFixed(0)}%`,
+                        box.x,
+                        box.y - 10
+                    );
+                    
+                    updatePredictionsUI(data.predictions);
+                } else {
+                    statusDetection.textContent = "Sin Rostro";
+                    statusDetection.style.background = "linear-gradient(135deg, #ef476f, #d90429)";
+                    statusDetection.style.boxShadow = "0 0 10px rgba(239, 71, 111, 0.4)";
+                    resetPredictionsUI();
+                }
+            } catch (err) {
+                console.error("Prediction API failed", err);
+            }
+        }
+
+        // Upload Panel Management
+        function setupUpload() {
+            dropZone.addEventListener('click', () => fileInput.click());
+            
+            // Drag and drop events
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('drag-over');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('drag-over');
+                }, false);
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length > 0) {
+                    handleUploadedFile(files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleUploadedFile(e.target.files[0]);
+                }
+            });
+
+            btnClearUpload.addEventListener('click', clearUpload);
+        }
+
+        function handleUploadedFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert("Por favor sube únicamente archivos de imagen.");
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const base64Data = e.target.result;
+                
+                uploadImageObj = new Image();
+                uploadImageObj.src = base64Data;
+                uploadImageObj.onload = () => {
+                    // Update UI viewports
+                    dropZone.classList.add('hidden');
+                    previewWrapper.classList.remove('hidden');
+                    uploadControls.classList.remove('hidden');
+                    
+                    // Draw image on preview canvas
+                    canvasUploadPreview.width = uploadImageObj.width;
+                    canvasUploadPreview.height = uploadImageObj.height;
+                    ctxUploadPreview.drawImage(uploadImageObj, 0, 0);
+                    
+                    // Submit to backend
+                    uploadAndPredict(base64Data);
+                };
+            };
+        }
+
+        async function uploadAndPredict(base64Image) {
+            statusDetection.textContent = "Analizando...";
+            statusDetection.style.background = "";
+            statusDetection.style.boxShadow = "";
+            
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: base64Image })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert("Error al analizar la imagen: " + data.error);
+                    clearUpload();
+                    return;
+                }
+                
+                // Redraw image to clear any previous drawings
+                ctxUploadPreview.drawImage(uploadImageObj, 0, 0);
+                
+                if (data.face_found && data.face_box) {
+                    statusDetection.textContent = "Detección Exitosa";
+                    statusDetection.style.background = "linear-gradient(135deg, #38b000, #007200)";
+                    statusDetection.style.boxShadow = "0 0 10px rgba(56, 176, 0, 0.4)";
+                    
+                    // Draw box on preview canvas (no mirroring here because uploaded photos are not mirrored)
+                    const box = data.face_box;
+                    const primaryPred = data.predictions[0];
+                    
+                    ctxUploadPreview.strokeStyle = primaryPred.color;
+                    ctxUploadPreview.lineWidth = Math.max(4, Math.round(uploadImageObj.width * 0.006));
+                    ctxUploadPreview.strokeRect(box.x, box.y, box.width, box.height);
+                    
+                    // Draw text above box
+                    ctxUploadPreview.fillStyle = primaryPred.color;
+                    const fontSize = Math.max(16, Math.round(uploadImageObj.width * 0.025));
+                    ctxUploadPreview.font = `bold ${fontSize}px Inter, sans-serif`;
+                    ctxUploadPreview.fillText(
+                        `${primaryPred.emotion} ${(primaryPred.probability * 100).toFixed(0)}%`,
+                        box.x,
+                        box.y - Math.round(box.height * 0.03)
+                    );
+                    
+                    updatePredictionsUI(data.predictions);
+                } else {
+                    statusDetection.textContent = "Rostro No Detectado (Inferencia Completa)";
+                    statusDetection.style.background = "linear-gradient(135deg, #e07a5f, #f2cc8f)";
+                    statusDetection.style.boxShadow = "0 0 10px rgba(224, 122, 95, 0.4)";
+                    updatePredictionsUI(data.predictions);
+                }
+            } catch (err) {
+                console.error("Upload prediction failed", err);
+                statusDetection.textContent = "Error de Servidor";
+            }
+        }
+
+        function clearUpload() {
+            uploadImageObj = null;
+            previewWrapper.classList.add('hidden');
+            uploadControls.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+            fileInput.value = '';
+            
+            statusDetection.textContent = "Esperando Entrada";
+            statusDetection.style.background = "";
+            statusDetection.style.boxShadow = "";
+            resetPredictionsUI();
+        }
+
+        // Result Bars Rendering
+        function updatePredictionsUI(predictions) {
+            const primary = predictions[0];
+            primaryEmotion.textContent = primary.emotion;
+            primaryEmotion.style.color = primary.color;
+            
+            // Update shadow color glow of primary result box
+            const primaryBox = document.querySelector('.primary-result-box');
+            primaryBox.style.boxShadow = `0 4px 20px ${primary.color}15`;
+            
+            // Re-render predictions list
+            predictionsList.innerHTML = '';
+            predictions.forEach(p => {
+                const pct = (p.probability * 100).toFixed(1) + '%';
+                
+                const item = document.createElement('div');
+                item.className = 'prediction-item';
+                item.innerHTML = `
+                    <div class="prediction-meta">
+                        <span class="prediction-name" style="color: ${p.emotion === primary.emotion ? '#fff' : 'var(--text-secondary)'}; font-weight: ${p.emotion === primary.emotion ? '700' : '500'}">${p.emotion}</span>
+                        <span class="prediction-prob" style="color: ${p.emotion === primary.emotion ? p.color : 'var(--text-primary)'}; font-weight: ${p.emotion === primary.emotion ? '700' : '500'}">${pct}</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: ${p.probability * 100}%; background: ${p.color};"></div>
+                    </div>
+                `;
+                predictionsList.appendChild(item);
+            });
+        }
+
+        function resetPredictionsUI() {
+            primaryEmotion.textContent = "Ninguna";
+            primaryEmotion.style.color = "var(--text-secondary)";
+            
+            const primaryBox = document.querySelector('.primary-result-box');
+            primaryBox.style.boxShadow = "";
+            
+            predictionsList.innerHTML = `
+                <div class="prediction-item">
+                    <div class="prediction-meta">
+                        <span class="prediction-name">felicidad</span>
+                        <span class="prediction-prob">0.0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 0%; background: #FFD166;"></div>
+                    </div>
+                </div>
+                <div class="prediction-item">
+                    <div class="prediction-meta">
+                        <span class="prediction-name">neutral</span>
+                        <span class="prediction-prob">0.0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 0%; background: #6C757D;"></div>
+                    </div>
+                </div>
+                <div class="prediction-item">
+                    <div class="prediction-meta">
+                        <span class="prediction-name">sorpresa</span>
+                        <span class="prediction-prob">0.0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 0%; background: #C77DFF;"></div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "experiment_name": "efficientnetb0_scratch_aug",
+  "accuracy": 0.4667535853976532,
+  "balanced_accuracy": 0.3493121177704617,
+  "precision_macro": 0.35183074091304095,
+  "recall_macro": 0.3493121177704617,
+  "f1_macro": 0.32531841620569496,
+  "precision_weighted": 0.46556212956056736,
+  "recall_weighted": 0.4667535853976532,
+  "f1_weighted": 0.4432713862514245,
+  "specificity_macro": 0.9038374533175232,
+  "top_2_accuracy": 0.5945241199478487,
+  "top_3_accuracy": 0.7310951760104303,
+  "mcc": 0.3093787761519264,
+  "cohen_kappa": 0.3023175839669132,
+  "auc_macro_ovr": 0.7361596418255366,
+  "inference_total_seconds": 11.305436300113797,
+  "inference_ms_per_image": 3.684953161705931,
+  "num_parameters": 4337795
+}

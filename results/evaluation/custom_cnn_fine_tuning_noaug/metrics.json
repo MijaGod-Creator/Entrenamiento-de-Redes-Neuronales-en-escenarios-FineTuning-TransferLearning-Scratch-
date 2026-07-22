@@ -1,0 +1,20 @@
+{
+  "experiment_name": "custom_cnn_fine_tuning_noaug",
+  "accuracy": 0.2089308996088657,
+  "balanced_accuracy": 0.1512383828696819,
+  "precision_macro": 0.1622496527877384,
+  "recall_macro": 0.1512383828696819,
+  "f1_macro": 0.13533405523372635,
+  "precision_weighted": 0.27949613841521237,
+  "recall_weighted": 0.2089308996088657,
+  "f1_weighted": 0.21648647523532094,
+  "specificity_macro": 0.8617568894320516,
+  "top_2_accuracy": 0.4044980443285528,
+  "top_3_accuracy": 0.5453063885267275,
+  "mcc": 0.028528243831716017,
+  "cohen_kappa": 0.026610937383776623,
+  "auc_macro_ovr": 0.5556061796601026,
+  "inference_total_seconds": 12.24374059960246,
+  "inference_ms_per_image": 3.9907889829212717,
+  "num_parameters": 1309415
+}

@@ -1,0 +1,14 @@
+{
+  "zip_path": "C:\\Users\\mijam\\Downloads\\IA\\Archive (2).zip",
+  "extraction_dir": "C:\\Users\\mijam\\Downloads\\IA\\dataset\\raw\\rafdb",
+  "dataset_root": "C:\\Users\\mijam\\Downloads\\IA\\dataset\\raw\\rafdb\\DATASET",
+  "label_files": [
+    "C:\\Users\\mijam\\Downloads\\IA\\dataset\\raw\\rafdb\\test_labels.csv",
+    "C:\\Users\\mijam\\Downloads\\IA\\dataset\\raw\\rafdb\\train_labels.csv"
+  ],
+  "split_dirs": {
+    "test": "C:\\Users\\mijam\\Downloads\\IA\\dataset\\raw\\rafdb\\DATASET\\test",
+    "train": "C:\\Users\\mijam\\Downloads\\IA\\dataset\\raw\\rafdb\\DATASET\\train"
+  },
+  "num_image_files": 15339
+}
