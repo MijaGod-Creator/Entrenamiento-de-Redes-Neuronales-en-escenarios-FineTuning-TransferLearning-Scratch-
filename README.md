@@ -2,7 +2,7 @@
 
 Proyecto cientifico reproducible para comparar arquitecturas CNN en RAF-DB.
 
-## 🚀 Guía de Inicio Rápido (Paso a Paso)
+##  Guía de Inicio Rápido (Paso a Paso)
 
 Sigue estos pasos para ejecutar el proyecto desde cero y generar tus propios modelos:
 
