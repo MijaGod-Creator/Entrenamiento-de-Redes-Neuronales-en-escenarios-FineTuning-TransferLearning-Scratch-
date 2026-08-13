@@ -102,10 +102,20 @@ cd Entrenamiento-de-Redes-Neuronales-en-escenarios-FineTuning-TransferLearning-S
 pip install -r requirements.txt
 ```
 
-### Paso 3: Descargar el dataset RAF-DB
-1. Solicitar acceso en: [http://www.whdeng.cn/raf/model1.html](https://www.kaggle.com/datasets/shuvoalok/raf-db-dataset)
-2. Descargar y extraer en `dataset/raw/`
-3. La estructura debe quedar así:
+### Paso 3: Descomprimir el dataset RAF-DB (Ya incluido)
+El dataset ya viene incluido en el repositorio en `dataset/Archive(2).zip` (~39.5 MB). Solo debes descomprimirlo dentro de la carpeta `dataset/raw/`.
+
+**En Windows (PowerShell):**
+```powershell
+Expand-Archive -Path dataset/Archive(2).zip -DestinationPath dataset/raw
+```
+
+**En Linux / macOS:**
+```bash
+unzip dataset/Archive(2).zip -d dataset/raw
+```
+
+La estructura final de la carpeta debe quedar de la siguiente forma:
 ```
 dataset/raw/
 ├── DATASET/
