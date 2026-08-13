@@ -118,6 +118,8 @@ def build_config_from_args(args: argparse.Namespace) -> ExperimentConfig:
         use_cutmix=args.cutmix,
         class_weight=not args.no_class_weight,
         fine_tune_at=args.fine_tune_at,
+        patience=args.patience,
+        self_cure=args.self_cure,
     )
 
 
@@ -154,7 +156,7 @@ def run_tuning(args: argparse.Namespace) -> None:
 
 def run_evaluate(args: argparse.Namespace) -> None:
     config = build_config_from_args(args)
-    model_path = Path(args.model_path) if args.model_path else SAVED_MODELS_DIR / config.experiment_name / "best_model.keras"
+    model_path = Path(args.model_path) if args.model_path else SAVED_MODELS_DIR / config.experiment_name / "best_model.pt"
     evaluator = ModelEvaluator(
         model_path=model_path,
         test_csv=PROCESSED_DATASET_DIR / "test.csv",
@@ -211,6 +213,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-trials", type=int, default=15)
     parser.add_argument("--model-path", default="")
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--patience", type=int, default=8, help="Paciencia para el Early Stopping.")
+    parser.add_argument("--self-cure", action="store_true", help="Activa el filtrado de ruido en etiquetas (SCN-inspired).")
     return parser.parse_args()
 
 

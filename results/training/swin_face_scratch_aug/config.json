@@ -1,0 +1,33 @@
+{
+  "architecture": "swin_face",
+  "scenario": "scratch",
+  "image_size": [
+    224,
+    224
+  ],
+  "num_classes": 7,
+  "batch_size": 32,
+  "epochs": 150,
+  "learning_rate": 3.5e-05,
+  "fine_tuning_learning_rate": 1e-05,
+  "optimizer": "adam",
+  "dropout": 0.35,
+  "dense_units": 256,
+  "weight_decay": 0.0,
+  "validation_size": 0.15,
+  "use_augmentation": true,
+  "use_mixup": true,
+  "use_cutmix": true,
+  "class_weight": true,
+  "patience": 30,
+  "reduce_lr_patience": 4,
+  "fine_tune_at": -30,
+  "self_cure": true,
+  "seed": 42,
+  "input_shape": [
+    224,
+    224,
+    3
+  ],
+  "experiment_name": "swin_face_scratch_aug"
+}

@@ -60,7 +60,28 @@ class ModelEvaluator:
         allowed_keys = set(ExperimentConfig.__dataclass_fields__.keys())
         config = ExperimentConfig(**{key: value for key, value in config_data.items() if key in allowed_keys})
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        model = build_model(config)
+        
+        # Detect backbone automatically from the state_dict to avoid size mismatches
+        backbone_override = None
+        state_dict = checkpoint["model_state_dict"]
+        if config.architecture == "qcs" and "csa.q_proj.weight" in state_dict:
+            ch = state_dict["csa.q_proj.weight"].shape[1]
+            if ch == 512:
+                backbone_override = "resnet18"
+            elif ch == 2048:
+                backbone_override = "resnet50"
+            elif ch == 1792:
+                backbone_override = "inception_resnet_v1"
+        elif config.architecture == "poster_v2" and "proj.weight" in state_dict:
+            ch = state_dict["proj.weight"].shape[1]
+            if ch == 512:
+                backbone_override = "resnet18"
+            elif ch == 2048:
+                backbone_override = "resnet50"
+            elif ch == 1792:
+                backbone_override = "inception_resnet_v1"
+
+        model = build_model(config, backbone_name=backbone_override)
         model.load_state_dict(checkpoint["model_state_dict"])
         model.to(device)
         model.eval()

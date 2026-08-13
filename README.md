@@ -1,260 +1,296 @@
-# Comparacion de arquitecturas CNN para reconocimiento de emociones faciales con RAF-DB
+# 🧠 Reconocimiento de Emociones Faciales con Redes Neuronales Profundas
 
-Proyecto cientifico reproducible para comparar arquitecturas CNN en RAF-DB.
+> **Evaluación comparativa de modelos CNN, Híbridos y Transformers en RAF-DB bajo escenarios de Fine-Tuning, Transfer Learning y Scratch**
 
-##  Guía de Inicio Rápido (Paso a Paso)
+[![Python 3.11](https://img.shields.io/badge/Python-3.11-blue.svg)](https://python.org)
+[![PyTorch 2.x](https://img.shields.io/badge/PyTorch-2.x-red.svg)](https://pytorch.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Sigue estos pasos para ejecutar el proyecto desde cero y generar tus propios modelos:
+---
 
-### 1. Clonar el repositorio e instalar dependencias
-Abre tu terminal y ejecuta los siguientes comandos:
+## 📋 Descripción del Proyecto
+
+Este proyecto implementa un sistema completo de **Reconocimiento de Emociones Faciales (FER)** que entrena y evalúa **9 familias de modelos** de aprendizaje profundo sobre el dataset RAF-DB (Real-world Affective Faces Database) con **7 emociones básicas**: Sorpresa, Miedo, Disgusto, Felicidad, Tristeza, Ira y Neutral.
+
+### 🏆 Resultados Principales
+
+| Modelo | Escenario | Aug | Accuracy | F1 Macro | Latencia | Params |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|
+| **POSTER++ (Poster V2)** 🥇 | Scratch | ✅ | **85.63%** | **0.7917** | 4.09ms | 28.9M |
+| **QCS (Cross-Similarity)** 🥈 | Scratch | ✅ | **84.91%** | **0.7770** | 4.27ms | 41.2M |
+| VGG16 | Fine-Tuning | ❌ | 77.71% | 0.6920 | 8.32ms | 21.1M |
+| DenseNet121 | Fine-Tuning | ✅ | 75.78% | 0.6848 | 6.19ms | 7.2M |
+| MobileNetV2 | Scratch | ❌ | 72.13% | 0.6310 | 3.56ms | 2.5M |
+| EfficientNetB0 | Fine-Tuning | ❌ | 70.01% | 0.6183 | 3.67ms | 4.3M |
+| SwinFace (Swin ViT) | Scratch | ✅ | 69.39% | 0.6040 | 8.69ms | 38.8M |
+| ResNet50 | Fine-Tuning | ✅ | 67.93% | 0.6068 | 5.30ms | 24.0M |
+| CustomCNN (baseline) | Scratch | ❌ | 59.13% | 0.4891 | 6.09ms | 1.3M |
+
+---
+
+## 🏗️ Arquitectura del Proyecto
+
+```
+📂 Proyecto FER/
+├── 📂 src/                          # Código fuente principal
+│   ├── 📂 augmentation/             # MixUp, CutMix, Albumentations
+│   │   ├── augmentations.py         # MixUp + CutMix batch-level
+│   │   └── albumentations_ops.py    # Pipeline de augmentation avanzado
+│   ├── 📂 config/                   # Configuración global
+│   │   ├── settings.py              # Constantes, rutas, label maps
+│   │   └── experiment.py            # ExperimentConfig dataclass
+│   ├── 📂 evaluation/               # Evaluación y métricas
+│   │   ├── metrics.py               # ModelEvaluator (Accuracy, F1, ROC, MCC)
+│   │   ├── plots.py                 # Gráficas de entrenamiento
+│   │   ├── comparison.py            # Comparativa entre modelos
+│   │   ├── explainability.py        # Grad-CAM y visualización
+│   │   └── error_analysis.py        # Análisis de errores
+│   ├── 📂 models/                   # Arquitecturas de modelos
+│   │   ├── model_factory.py         # Factory pattern + congelamiento de capas
+│   │   ├── applications.py          # CNNs estándar (VGG16, ResNet50, etc.)
+│   │   ├── custom_cnn.py            # CNN personalizada (baseline)
+│   │   ├── qcs.py                   # ⭐ QCS - Quadruplet Cross-Similarity
+│   │   ├── poster_v2.py             # ⭐ POSTER++ con landmark queries
+│   │   ├── swin_face.py             # ⭐ SwinFace - Swin ViT + CBAM
+│   │   └── deit.py                  # ⭐ DeiT - Data-efficient ViT
+│   ├── 📂 preprocessing/            # Carga y split de datos
+│   │   ├── data_split.py            # Split estratificado train/val/test
+│   │   ├── dataset_inspector.py     # EDA y análisis del dataset
+│   │   └── tfdata.py                # DataLoaders y transformaciones
+│   ├── 📂 training/                 # Bucle de entrenamiento
+│   │   ├── trainer.py               # ExperimentTrainer (SCN, Mixed Precision)
+│   │   ├── tuner.py                 # Hyperparameter tuning
+│   │   └── callbacks.py             # Callbacks de entrenamiento
+│   └── 📂 utils/                    # Utilidades generales
+├── 📂 saved_models/                 # Pesos entrenados (Git LFS)
+│   ├── poster_v2_scratch_aug/       # 🥇 Campeón - 85.63%
+│   ├── qcs_scratch_aug/             # 🥈 Subcampeón - 84.91%
+│   ├── swin_face_scratch_aug/       # Swin Transformer
+│   └── deit_scratch_aug/            # DeiT Transformer
+├── 📂 results/                      # Resultados experimentales
+│   ├── 📂 training/                 # Logs de entrenamiento (CSV)
+│   ├── 📂 evaluation/               # Métricas, confusion matrices, ROC
+│   └── model_comparison.csv         # Tabla comparativa global
+├── 📂 figures/                      # Gráficas generadas
+│   ├── 📂 report/                   # Figuras del artículo
+│   └── 📂 evaluation/               # Comparativas de evaluación
+├── 📂 DOCUMENTACION/                # Documentación científica (.docx)
+├── 📂 PARA_ANDROID_STUDIO/          # Modelos exportados para Android
+├── main.py                          # Punto de entrada CLI
+├── requirements.txt                 # Dependencias
+└── README.md                        # Este archivo
+```
+
+---
+
+## 🚀 Instalación y Configuración
+
+### Requisitos Previos
+- **Python** 3.10+
+- **CUDA** 11.8+ (GPU NVIDIA recomendada, funciona con CPU)
+- **RAM** 8 GB mínimo
+- **GPU VRAM** 4 GB mínimo (optimizado para RTX 3050)
+
+### Paso 1: Clonar el repositorio
 ```bash
-# Clonar el proyecto
-git clone https://github.com/MijaGod-Creator/ia-con-sin-transfer-learning-fine-tuning.git
-cd ia-con-sin-transfer-learning-fine-tuning
+git clone https://github.com/MijaGod-Creator/Entrenamiento-de-Redes-Neuronales-en-escenarios-FineTuning-TransferLearning-Scratch-.git
+cd Entrenamiento-de-Redes-Neuronales-en-escenarios-FineTuning-TransferLearning-Scratch-
+```
 
-# Crear entorno virtual
-python -m venv .venv
-.venv\Scripts\activate  # En Windows
-
-# Instalar PyTorch con soporte CUDA (GPU)
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-
-# Instalar dependencias restantes
+### Paso 2: Instalar dependencias
+```bash
 pip install -r requirements.txt
 ```
 
-### 2. Configurar el Dataset
-El dataset original `archive (2).zip` ya está incluido en el repositorio para facilitar la ejecución. Solo debes correr el script de preparación para extraerlo e iniciar el análisis exploratorio:
+### Paso 3: Descargar el dataset RAF-DB
+1. Solicitar acceso en: http://www.whdeng.cn/raf/model1.html
+2. Descargar y extraer en `dataset/raw/`
+3. La estructura debe quedar así:
+```
+dataset/raw/
+├── DATASET/
+│   ├── train/
+│   │   ├── 1/   (surprise)
+│   │   ├── 2/   (fear)
+│   │   ├── ...
+│   │   └── 7/   (neutral)
+│   └── test/
+│       ├── 1/
+│       └── ...
+```
+
+### Paso 4: Ejecutar el análisis exploratorio y preprocesamiento
 ```bash
 python main.py --stage setup
-```
-
-### 3. Crear los Splits de Datos (Preprocesamiento)
-Genera las particiones de entrenamiento, validación y prueba:
-```bash
-python main.py --stage preprocess --validation-size 0.15
-```
-
-### 4. Entrenar tus Modelos
-Puedes entrenar un modelo específico para generar sus pesos. Por ejemplo, entrena una CNN personalizada desde cero (`scratch`):
-```bash
-python main.py --stage train --architecture custom_cnn --scenario scratch --epochs 10
-```
-*(Puedes sustituir `custom_cnn` por otras arquitecturas como `resnet50`, `vgg16`, `mobilenetv2`, etc., y cambiar `--scenario` a `transfer` o `fine_tuning`).*
-
-Para ejecutar la búsqueda completa de todos los modelos (esto puede tardar varias horas):
-```bash
-python main.py --stage train-grid --architecture all --scenario all --epochs 30
-```
-
-### 5. Evaluar los Modelos y Comparar
-Una vez que entrenes uno o más modelos, evalúa sus métricas:
-```bash
-python main.py --stage evaluate --architecture custom_cnn --scenario scratch
-```
-Luego genera la tabla comparativa con:
-```bash
-python main.py --stage compare
-```
-
-### 6. Levantar la Aplicación Web
-Para probar los modelos con imágenes en tiempo real, inicia el servidor local Flask:
-```bash
-python app.py
-```
-Abre en tu navegador `http://127.0.0.1:5000/`. El servidor cargará automáticamente el modelo entrenado con el mejor F1-Score que esté guardado en tu carpeta `saved_models/`.
-
-## Estructura
-
-```text
-dataset/
-  Archive(2).zip
-  raw/
-  processed/
-src/
-  config/
-  preprocessing/
-  augmentation/
-  models/
-  training/
-  evaluation/
-  utils/
-results/
-  eda/
-figures/
-  eda/
-logs/
-saved_models/
-notebooks/
-main.py
-requirements.txt
-```
-
-## Instalacion
-
-Esta version del proyecto usa PyTorch y esta pensada para Windows con GPU nativa.
-Usa Python 3.10 o 3.11 y instala el build CUDA de PyTorch que coincida con tu driver/NVIDIA Toolkit.
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-python -m pip install --upgrade pip
-# Instala primero PyTorch con soporte CUDA desde el sitio oficial de PyTorch.
-# Ejemplo:
-# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-pip install -r requirements.txt
-```
-
-Si ya tenias creado el entorno con TensorFlow, crea uno nuevo para evitar conflictos de dependencias.
-
-## Ejecutar ETAPA 1
-
-```bash
 python main.py --stage eda
+python main.py --stage preprocess
 ```
 
-El script:
+---
 
-- Detecta automaticamente `Archive(2).zip` en la raiz o en `dataset/`.
-- Extrae el dataset en `dataset/raw/rafdb/`.
-- Identifica splits, carpetas de clases, CSV de etiquetas e imagenes.
-- Calcula conteos por clase, resoluciones, formatos, duplicados, etiquetas nulas, imagenes danadas y desbalance.
-- Guarda tablas en `results/eda/`.
-- Guarda graficas en `figures/eda/`.
+## 🎯 Uso: Entrenar Modelos
 
-## Salidas principales
-
-- `results/eda/eda_summary.json`
-- `results/eda/image_metadata.csv`
-- `results/eda/class_distribution.csv`
-- `results/eda/split_distribution.csv`
-- `results/eda/zip_index.csv`
-- `figures/eda/class_distribution_bar.png`
-- `figures/eda/class_distribution_pie.png`
-- `figures/eda/split_class_distribution_bar.png`
-- `figures/eda/resolution_and_size_histograms.png`
-- `figures/eda/examples_per_class.png`
-
-## Preparar proyecto completo
-
-Ejecuta EDA, crea splits train/validation/test, guarda reporte de entorno y genera el borrador de articulo:
-
+### Entrenar un modelo específico
 ```bash
-python main.py --stage setup
+# POSTER++ (Campeón) - Scratch con augmentation
+python main.py --stage train --architecture poster_v2 --scenario scratch --epochs 100 --learning-rate 0.000035 --augmentation --mixup --cutmix --patience 30 --self-cure
+
+# QCS (Subcampeón) - Scratch con augmentation
+python main.py --stage train --architecture qcs --scenario scratch --epochs 100 --learning-rate 0.000035 --augmentation --mixup --cutmix --patience 30 --self-cure
+
+# SwinFace - Scratch con augmentation
+python main.py --stage train --architecture swin_face --scenario scratch --epochs 100 --learning-rate 0.000035 --augmentation --mixup --cutmix --patience 30 --self-cure
+
+# DeiT - Scratch con augmentation
+python main.py --stage train --architecture deit --scenario scratch --epochs 100 --learning-rate 0.000035 --augmentation --mixup --cutmix --patience 30 --self-cure
+
+# VGG16 - Fine-Tuning estándar
+python main.py --stage train --architecture vgg16 --scenario fine_tuning --epochs 30 --augmentation
 ```
 
-## ETAPA 2 - Preprocesamiento
-
+### Entrenar todos los modelos (grid completo)
 ```bash
-python main.py --stage preprocess --validation-size 0.15
+python main.py --stage train-grid
 ```
 
-Genera:
-
-- `dataset/processed/train.csv`
-- `dataset/processed/validation.csv`
-- `dataset/processed/test.csv`
-
-El pipeline de PyTorch implementa lectura, resize, normalizacion, `DataLoader`, `pin_memory` y uso de GPU cuando esta disponible.
-
-## ETAPA 3 - Data Augmentation
-
-Activar augmentation durante entrenamiento:
-
+### Reanudar un entrenamiento interrumpido
 ```bash
-python main.py --stage train --architecture custom_cnn --scenario scratch --augmentation
+python main.py --stage train --architecture poster_v2 --scenario scratch --epochs 100 --resume
 ```
 
-Activar MixUp o CutMix:
+---
+
+## 📊 Evaluar Modelos
 
 ```bash
-python main.py --stage train --architecture custom_cnn --scenario scratch --augmentation --mixup
-python main.py --stage train --architecture custom_cnn --scenario scratch --augmentation --cutmix
-```
+# Evaluar un modelo específico
+python main.py --stage evaluate --architecture poster_v2 --scenario scratch --augmentation
 
-## ETAPAS 4 y 5 - Arquitecturas y escenarios
-
-Arquitecturas disponibles:
-
-- `custom_cnn`
-- `vgg16`
-- `resnet50`
-- `mobilenetv2`
-- `efficientnetb0`
-- `densenet121`
-
-Escenarios:
-
-- `scratch`
-- `transfer`
-- `fine_tuning`
-
-Ejemplos:
-
-```bash
-python main.py --stage train --architecture vgg16 --scenario scratch --epochs 30
-python main.py --stage train --architecture resnet50 --scenario transfer --epochs 30
-python main.py --stage train --architecture efficientnetb0 --scenario fine_tuning --epochs 20 --learning-rate 0.0001
-```
-
-Grid completo, con y sin augmentation:
-
-```bash
-python main.py --stage train-grid --architecture all --scenario all --epochs 30
-```
-
-## ETAPA 6 - Optimizacion de hiperparametros
-
-```bash
-python main.py --stage tune --architecture mobilenetv2 --scenario transfer --max-trials 15
-```
-
-Optimiza learning rate, batch size, optimizer, dropout, dense units y weight decay mediante una busqueda simple en PyTorch.
-
-## ETAPA 7 - Callbacks
-
-El entrenamiento usa:
-
-- EarlyStopping
-- ReduceLROnPlateau
-- ModelCheckpoint
-- TensorBoard
-- CSVLogger
-- LearningRateScheduler
-
-## ETAPA 8 - Evaluacion
-
-```bash
-python main.py --stage evaluate --architecture mobilenetv2 --scenario transfer
-```
-
-Calcula accuracy, precision, recall, F1, specificity, top-2, top-3, ROC, AUC, confusion matrix, classification report, MCC, balanced accuracy y Cohen Kappa.
-
-## ETAPAS 9 y 10 - Visualizaciones y comparacion
-
-Luego de evaluar varios modelos:
-
-```bash
+# Comparar todos los modelos entrenados
 python main.py --stage compare
 ```
 
-Genera `results/model_comparison.csv`, `results/model_comparison.xlsx` y graficas comparativas.
+---
 
+## 🔧 Técnicas Implementadas
 
-## Posibles errores
+### Preprocesamiento
+- **Alineación Facial Geométrica**: MTCNN detecta 5 landmarks → cálculo de ángulo interocular → rotación afín → crop 224×224
+- **Normalización ImageNet**: mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)
 
-- **No se encontro el ZIP**: coloque `Archive(2).zip` en la raiz del proyecto o en `dataset/`.
-- **Falta OpenCV**: ejecute `pip install opencv-python`.
-- **Permisos al extraer**: cierre visores de imagenes o procesos que esten usando `dataset/raw/rafdb/`.
-- **No detecta GPU en Windows**: revise que el entorno use el build CUDA de PyTorch y que `torch.cuda.is_available()` devuelva `True`.
-- **PyTorch en CPU**: si instalaste la rueda CPU por error, reinstala con el indice CUDA oficial de PyTorch.
+### Data Augmentation
+- **Nivel de imagen**: RandomHorizontalFlip, RandomRotation(15°), RandomAffine, ColorJitter, RandomResizedCrop, RandomErasing
+- **Nivel de batch**: MixUp (α=0.2, distribución Beta) y CutMix (α=0.35)
+- **Albumentations**: GaussNoise, Blur, CoarseDropout
 
-## Buenas practicas aplicadas
+### Función de Pérdida
+- **Soft-Target Cross-Entropy**: compatible con las etiquetas suaves de MixUp/CutMix
+- **Class Weights Balanceados**: sklearn `compute_class_weight('balanced')` para mitigar el desbalance
+- **Self-Cure Network (SCN)**: pesos dinámicos que suprimen etiquetas ruidosas (umbral 0.85/0.15)
 
-- Semillas aleatorias configuradas.
-- Codigo modular por responsabilidad.
-- No se descarga RAF-DB; solo se usa el ZIP local.
-- El EDA se guarda como artefactos reproducibles en CSV, JSON y PNG.
-- Entrenamientos, logs, modelos y metricas se guardan automaticamente.
-- El grid completo queda parametrizado para ejecucion reproducible en GPU.
+### Optimización
+- **Optimizador**: AdamW (weight_decay=1e-4)
+- **Scheduler**: CosineAnnealingLR (épocas ≥ 45) o ReduceLROnPlateau
+- **Mixed Precision**: torch.amp.GradScaler para reducir VRAM
+- **Early Stopping**: paciencia de 30 épocas
+
+### Escenarios de Entrenamiento
+| Escenario | Descripción |
+|:---|:---|
+| **Scratch** | Todas las capas entrenables. Pesos iniciales de VGGFace2 (modelos faciales) o ImageNet (CNNs) |
+| **Transfer Learning** | Backbone completamente congelado. Solo se entrena la cabeza clasificadora |
+| **Fine-Tuning** | Backbone congelado excepto el último bloque (block8/layers[-1]/blocks[-1]) |
+
+---
+
+## 📱 Despliegue en Android
+
+Los modelos exportados para Android se encuentran en `PARA_ANDROID_STUDIO/`:
+- Archivos `.ptl` (PyTorch Lite) para PyTorch Mobile
+- Archivos `.onnx` para ONNX Runtime
+
+```kotlin
+// Ejemplo de uso en Android (Kotlin)
+val module = LiteModuleLoader.load("poster_v2.ptl")
+val inputTensor = TensorImageUtils.bitmapToFloat32Tensor(
+    bitmap, floatArrayOf(0.485f, 0.456f, 0.406f),
+    floatArrayOf(0.229f, 0.224f, 0.225f)
+)
+val output = module.forward(IValue.from(inputTensor)).toTensor()
+```
+
+---
+
+## 🔬 Modelos SOTA Implementados
+
+### POSTER++ (Poster V2) - 🥇 Campeón (85.63%)
+Red híbrida que usa **68 landmark queries aprendibles** (sin detector explícito) y **atención bidireccional** (Image→Landmarks→Image) sobre un backbone InceptionResnetV1 pre-entrenado en VGGFace2.
+
+### QCS (Quadruplet Cross-Similarity) - 🥈 (84.91%)
+Usa **Cross-Similarity Attention** que durante el entrenamiento cruza features de diferentes muestras del batch mediante `torch.roll()`, forzando representaciones discriminativas. En inferencia usa self-attention.
+
+### SwinFace (Swin Transformer + CBAM) - (69.39%)
+Backbone **Swin Transformer** con ventanas desplazadas (W-MSA/SW-MSA), extracción multi-escala (local 1344ch + global 768ch = 2112ch), **CBAM** (Channel + Spatial attention) y TaskSpecificSubnet.
+
+### DeiT (Data-efficient Image Transformer)
+**Vision Transformer** con destilación via `timm`. Usa `deit_tiny_patch16_224` (5.7M params) optimizado para datasets pequeños.
+
+---
+
+## ⚡ Optimización de Hardware
+
+Este proyecto fue diseñado para funcionar en **GPUs de gama portátil** (RTX 3050 con 4GB VRAM):
+
+| Técnica | Ahorro |
+|:---|:---|
+| Congelamiento selectivo de capas | VRAM: 3.2GB → 1.2GB (62%) |
+| Mixed Precision (FP16) | Velocidad: 3x más rápido |
+| Batch size optimizado (32) | Estabilidad de gradientes |
+| DataLoader sin workers (Windows) | Compatibilidad sin deadlocks |
+
+---
+
+## 📄 Documentación
+
+El directorio `DOCUMENTACION/` contiene:
+- **Resultados del Proyecto de Reconocimiento de Emociones (1).docx**: Registro completo de avance con 12 figuras, 2 tablas, análisis descriptivos y 12 anexos de código fuente
+
+---
+
+## 📦 Dependencias Principales
+
+```
+torch >= 2.0
+torchvision >= 0.15
+timm >= 0.9
+facenet-pytorch >= 2.5
+scikit-learn >= 1.3
+pandas >= 2.0
+numpy >= 1.24
+Pillow >= 10.0
+matplotlib >= 3.7
+tqdm >= 4.65
+python-docx >= 0.8
+```
+
+---
+
+## 👤 Autor
+
+**Mijamin Taipe** - Proyecto de Inteligencia Artificial  
+Universidad - Reconocimiento de Emociones Faciales
+
+---
+
+## 📝 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
+
+---
+
+## 🙏 Agradecimientos
+
+- Dataset [RAF-DB](http://www.whdeng.cn/raf/model1.html) por S. Li, W. Deng, y J. Du
+- [facenet-pytorch](https://github.com/timesler/facenet-pytorch) por Tim Esler
+- [timm](https://github.com/huggingface/pytorch-image-models) por Ross Wightman
+- Inspirado en los papers de POSTER++, QCS y SwinFace

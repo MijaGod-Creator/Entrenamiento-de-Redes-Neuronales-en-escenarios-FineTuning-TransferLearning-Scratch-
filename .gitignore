@@ -1,44 +1,76 @@
-# Byte-compiled / optimized / DLL files
+# =====================================================
+# Python
+# =====================================================
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
 
-# Trained models and large weights
-saved_models/
-*.pt
-*.pth
-*.h5
-*.ckpt
-
-# Datasets and compressed files
-dataset/
-*.zip
-!archive (2).zip
-!Archive(2).zip
-*.tar.gz
-*.tgz
-*.rar
-
+# =====================================================
 # Virtual environments
+# =====================================================
 venv/
-.venv/
+.env/
 env/
-venv.bak/
-.env
 
-# IDE and editors
+# =====================================================
+# IDE
+# =====================================================
 .vscode/
 .idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
 *.swp
+*.swo
+*~
 
-# OS files
-.DS_Store
+# =====================================================
+# OS
+# =====================================================
 Thumbs.db
+Desktop.ini
+.DS_Store
 
-# Generated articles/journals (kept locally only)
-results/article/rafdb_cnn_ieee_article.md
-results/article/rafdb_cnn_tem_journal.docx
+# =====================================================
+# Dataset (users must download RAF-DB separately)
+# =====================================================
+dataset/raw/
+dataset/raw_aligned/
+dataset/processed/*.csv
+
+# =====================================================
+# Model weights - only keep champion models' best weights
+# Exclude all non-champion model weights to save space
+# =====================================================
+# Exclude redundant checkpoints (final and latest are duplicates of best)
+saved_models/**/final_model.pt
+saved_models/**/latest_model.pt
+
+# Exclude NON-champion models (users can retrain these)
+saved_models/custom_cnn_*/
+saved_models/vgg16_*/
+saved_models/resnet50_*/
+saved_models/mobilenetv2_*/
+saved_models/efficientnetb0_*/
+saved_models/densenet121_*/
+saved_models/smoke_test/
+
+# =====================================================
+# Hugging Face cache
+# =====================================================
+.cache/
+
+# =====================================================
+# Scratch / temporary files
+# =====================================================
+scratch/
+
+# =====================================================
+# Logs
+# =====================================================
+logs/
+*.log

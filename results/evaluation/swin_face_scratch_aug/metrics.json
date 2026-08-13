@@ -1,0 +1,20 @@
+{
+  "experiment_name": "swin_face_scratch_aug",
+  "accuracy": 0.6939374185136897,
+  "balanced_accuracy": 0.6307741969559878,
+  "precision_macro": 0.5883579475239648,
+  "recall_macro": 0.6307741969559878,
+  "f1_macro": 0.6039919648153156,
+  "precision_weighted": 0.7051295212562448,
+  "recall_weighted": 0.6939374185136897,
+  "f1_weighted": 0.6975108018639268,
+  "specificity_macro": 0.9460432650328642,
+  "top_2_accuracy": 0.8634289439374185,
+  "top_3_accuracy": 0.9305736636245111,
+  "mcc": 0.6018364705916449,
+  "cohen_kappa": 0.601265276158397,
+  "auc_macro_ovr": 0.9076709200167291,
+  "inference_total_seconds": 26.669239700073376,
+  "inference_ms_per_image": 8.692711766647125,
+  "num_parameters": 38800289
+}

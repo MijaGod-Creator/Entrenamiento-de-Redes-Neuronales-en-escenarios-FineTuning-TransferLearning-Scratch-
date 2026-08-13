@@ -61,6 +61,10 @@ SUPPORTED_ARCHITECTURES = (
     "mobilenetv2",
     "efficientnetb0",
     "densenet121",
+    "qcs",
+    "poster_v2",
+    "swin_face",
+    "deit",
 )
 
 SUPPORTED_SCENARIOS = ("scratch", "transfer", "fine_tuning")

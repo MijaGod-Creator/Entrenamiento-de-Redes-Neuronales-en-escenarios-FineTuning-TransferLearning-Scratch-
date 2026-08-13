@@ -35,6 +35,7 @@ class ExperimentConfig:
     patience: int = 8
     reduce_lr_patience: int = 4
     fine_tune_at: int = -30
+    self_cure: bool = False
     seed: int = RANDOM_SEED
 
     @property

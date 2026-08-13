@@ -1,0 +1,20 @@
+{
+  "experiment_name": "poster_v2_scratch_aug",
+  "accuracy": 0.85625814863103,
+  "balanced_accuracy": 0.7931707381717856,
+  "precision_macro": 0.7925888003023297,
+  "recall_macro": 0.7931707381717856,
+  "f1_macro": 0.7917196133907467,
+  "precision_weighted": 0.8594116935737302,
+  "recall_weighted": 0.85625814863103,
+  "f1_weighted": 0.8574040094277918,
+  "specificity_macro": 0.9749416980341773,
+  "top_2_accuracy": 0.9449152542372882,
+  "top_3_accuracy": 0.9729465449804433,
+  "mcc": 0.8116554089797412,
+  "cohen_kappa": 0.8115192173394942,
+  "auc_macro_ovr": 0.9646020363324924,
+  "inference_total_seconds": 12.541192600037903,
+  "inference_ms_per_image": 4.087742046948469,
+  "num_parameters": 28982206
+}
