@@ -1,0 +1,40 @@
+=====================================================================
+  SISTEMA DE RECONOCIMIENTO DE EMOCIONES FACIALES (FER)
+=====================================================================
+
+Este directorio contiene los accesos directos para la instalación e
+iniciación de la interfaz interactiva web de escritorio en Windows.
+
+---------------------------------------------------------------------
+REQUISITOS PREVIOS:
+---------------------------------------------------------------------
+- Tener instalado Python 3.10 o Python 3.11 en Windows.
+- Si no está instalado, descárgalo de la tienda de Microsoft (Microsoft Store)
+  buscando "Python 3.11", o desde la web oficial: https://www.python.org/downloads/
+  * IMPORTANTE: Durante la instalación, marca la casilla "Add Python to PATH".
+
+---------------------------------------------------------------------
+INSTRUCCIONES DE USO:
+---------------------------------------------------------------------
+
+Paso 1: Instalación (Solo se hace la primera vez)
+   - Haz doble clic sobre el archivo "Instalar_Programa.bat".
+   - Esto creará un entorno virtual limpio de Python, configurará el 
+     paquete compatible de stringzilla y descargará todas las librerías 
+     necesarias del proyecto automáticamente.
+   - Espera a que la consola muestre el mensaje verde de éxito y presiona 
+     cualquier tecla para cerrar.
+
+Paso 2: Iniciar la Aplicación
+   - Haz doble clic sobre el archivo "Iniciar_Programa.bat".
+   - Esto levantará el servidor web Flask en segundo plano e iniciará el 
+     modelo entrenado (cargará el mejor modelo de la carpeta saved_models).
+   - Se abrirá automáticamente tu navegador web (Chrome, Edge, etc.) en
+     la dirección: http://localhost:5000
+   - ¡Listo! Podrás usar tu cámara web en tiempo real o subir fotos para 
+     probar la detección de emociones del proyecto.
+
+Paso 3: Cerrar la Aplicación
+   - Cuando termines de probarla, regresa a la ventana de la consola del 
+     paso 2 y presiona cualquier tecla. 
+   - El script apagará el servidor de forma segura y cerrará la ventana.
