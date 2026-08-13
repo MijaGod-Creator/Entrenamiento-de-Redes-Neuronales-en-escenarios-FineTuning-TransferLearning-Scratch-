@@ -102,6 +102,11 @@ cd Entrenamiento-de-Redes-Neuronales-en-escenarios-FineTuning-TransferLearning-S
 pip install -r requirements.txt
 ```
 
+> 💡 **Solución de problemas (Windows):** Si al instalar las dependencias obtienes un error relacionado con la compilación de `stringzilla` (como `Microsoft Visual C++ 14.0 or greater is required`), puedes solucionarlo ejecutando:
+> ```bash
+> pip install "stringzilla<3.10"
+> ```
+
 ### Paso 3: Descomprimir el dataset RAF-DB (Ya incluido)
 El dataset ya viene incluido en el repositorio en `dataset/Archive(2).zip` (~39.5 MB). Solo debes descomprimirlo dentro de la carpeta `dataset/raw/`.
 
