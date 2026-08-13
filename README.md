@@ -280,11 +280,6 @@ python-docx >= 0.8
 **Mijamin Taipe** - Proyecto de Inteligencia Artificial  
 Universidad - Reconocimiento de Emociones Faciales
 
----
-
-## 📝 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
 
 ---
 
