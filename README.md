@@ -103,7 +103,7 @@ pip install -r requirements.txt
 ```
 
 ### Paso 3: Descargar el dataset RAF-DB
-1. Solicitar acceso en: http://www.whdeng.cn/raf/model1.html
+1. Solicitar acceso en: [http://www.whdeng.cn/raf/model1.html](https://www.kaggle.com/datasets/shuvoalok/raf-db-dataset)
 2. Descargar y extraer en `dataset/raw/`
 3. La estructura debe quedar así:
 ```
