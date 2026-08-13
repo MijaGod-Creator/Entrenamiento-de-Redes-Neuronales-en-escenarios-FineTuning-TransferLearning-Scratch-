@@ -36,11 +36,12 @@ Desktop.ini
 .DS_Store
 
 # =====================================================
-# Dataset (users must download RAF-DB separately)
+# Dataset
 # =====================================================
 dataset/raw/
 dataset/raw_aligned/
-dataset/processed/*.csv
+!dataset/Archive(2).zip
+!dataset/processed/*.csv
 
 # =====================================================
 # Model weights - only keep champion models' best weights
