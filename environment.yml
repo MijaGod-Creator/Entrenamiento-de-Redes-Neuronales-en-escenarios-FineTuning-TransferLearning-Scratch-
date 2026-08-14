@@ -1,0 +1,30 @@
+name: fer_env
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pytorch::pytorch
+  - pytorch::torchvision
+  - pytorch::torchaudio
+  - pytorch::pytorch-cuda=11.8
+  - opencv
+  - pandas
+  - numpy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - openpyxl
+  - tabulate
+  - pillow
+  - pip
+  - pip:
+      - albumentations==1.4.24
+      - python-dotenv
+      - python-docx
+      - facenet-pytorch
+      - timm
+      - tensorboard
+      - "stringzilla<3.10"

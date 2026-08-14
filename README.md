@@ -97,15 +97,25 @@ git clone https://github.com/MijaGod-Creator/Entrenamiento-de-Redes-Neuronales-e
 cd Entrenamiento-de-Redes-Neuronales-en-escenarios-FineTuning-TransferLearning-Scratch-
 ```
 
-### Paso 2: Instalar dependencias
+### Paso 2: Instalar dependencias (Elige una opción)
+
+**Opción A: Usando Conda / Anaconda (Recomendado - Evita errores en Windows)**
+Si utilizas Anaconda o Miniconda, ejecuta el siguiente comando en tu terminal (Anaconda Prompt) para crear un entorno virtual e instalar todas las dependencias pre-compiladas (incluyendo controladores CUDA de GPU):
+```bash
+conda env create -f environment.yml
+conda activate fer_env
+```
+
+**Opción B: Usando pip estándar**
+Si prefieres usar `pip` de Python directo:
 ```bash
 pip install -r requirements.txt
 ```
-
-> 💡 **Solución de problemas (Windows):** Si al instalar las dependencias obtienes un error relacionado con la compilación de `stringzilla` (como `Microsoft Visual C++ 14.0 or greater is required`), puedes solucionarlo ejecutando:
+> 💡 **Solución de problemas (Windows):** Si al instalar por `pip` obtienes un error relacionado con la compilación de `stringzilla` (como `Microsoft Visual C++ 14.0 or greater is required`), puedes solucionarlo ejecutando:
 > ```bash
 > pip install "stringzilla<3.10"
 > ```
+
 
 ### Paso 3: Descomprimir el dataset RAF-DB (Ya incluido)
 El dataset ya viene incluido en el repositorio en `dataset/Archive(2).zip` (~39.5 MB). Solo debes descomprimirlo dentro de la carpeta `dataset/raw/`.
