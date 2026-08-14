@@ -10,6 +10,7 @@ dependencies:
   - pytorch::torchvision
   - pytorch::torchaudio
   - pytorch::pytorch-cuda=11.8
+  - conda-forge::stringzilla
   - opencv
   - pandas
   - numpy
@@ -27,4 +28,3 @@ dependencies:
       - facenet-pytorch
       - timm
       - tensorboard
-      - "stringzilla<3.10"
