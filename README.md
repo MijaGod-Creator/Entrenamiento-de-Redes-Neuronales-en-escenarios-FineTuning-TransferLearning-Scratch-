@@ -185,6 +185,44 @@ python main.py --stage train --architecture poster_v2 --scenario scratch --epoch
 
 ---
 
+## 🔬 Reproducción del Estudio de Ablación (Paso a Paso E1 a E6)
+
+Para evaluar cuantitativamente el impacto de cada componente metodológico sobre el modelo líder (**POSTER++**), se pueden ejecutar secuencialmente los siguientes 6 experimentos de ablación controlada:
+
+| Experimento | Configuración Metodológica | Accuracy (%) | $\Delta$ Acc | F1-Score Macro | $\Delta$ F1 |
+|:---|:---|:---:|:---:|:---:|:---:|
+| **E1** | Línea Base (Sin Regularización) | 78.20 ± 0.45% | Línea Base | 0.6950 ± 0.012 | Línea Base |
+| **E2** | + Alineación Geométrica MTCNN | 80.12 ± 0.40% | +1.92% | 0.7210 ± 0.010 | +0.0260 |
+| **E3** | + Pesos de Clase Balanceados | 81.05 ± 0.42% | +0.93% | 0.7380 ± 0.011 | +0.0170 |
+| **E4** | + MixUp ($\alpha=0.2$) | 83.20 ± 0.38% | +2.15% | 0.7610 ± 0.009 | +0.0230 |
+| **E5** | + CutMix ($\alpha=0.35$) | 84.50 ± 0.35% | +1.30% | 0.7790 ± 0.008 | +0.0180 |
+| **E6** | + Mecanismo SCN (Atenuación Ruido) | **85.63 ± 0.38%** | **+1.13%** | **0.7917 ± 0.008** | **+0.0127** |
+
+### 💻 Comandos CLI para Reproducir cada Experimento de Ablación:
+
+```bash
+# E1: Línea Base (Sin alineación, sin pesos balanceados, sin MixUp/CutMix/SCN)
+python main.py --stage train --architecture poster_v2 --scenario scratch --epochs 100 --learning-rate 0.000035 --patience 30 --no-class-weight
+
+# E2: + Alineación Geométrica MTCNN (Preprocesamiento canónico a 0° interocular)
+python main.py --stage preprocess
+python main.py --stage train --architecture poster_v2 --scenario scratch --epochs 100 --learning-rate 0.000035 --patience 30 --no-class-weight
+
+# E3: + Pesos de Clase Balanceados (Ponderación inversa frente al desbalance 16.78:1)
+python main.py --stage train --architecture poster_v2 --scenario scratch --epochs 100 --learning-rate 0.000035 --patience 30
+
+# E4: + MixUp (Interpolación convexa en lote con distribución Beta α=0.2)
+python main.py --stage train --architecture poster_v2 --scenario scratch --epochs 100 --learning-rate 0.000035 --patience 30 --augmentation --mixup
+
+# E5: + CutMix (Reemplazo rectangular de parches faciales α=0.35)
+python main.py --stage train --architecture poster_v2 --scenario scratch --epochs 100 --learning-rate 0.000035 --patience 30 --augmentation --mixup --cutmix
+
+# E6: + Mecanismo SCN (Atenuación de ruido en etiquetas y regularización completa)
+python main.py --stage train --architecture poster_v2 --scenario scratch --epochs 100 --learning-rate 0.000035 --patience 30 --augmentation --mixup --cutmix --self-cure
+```
+
+---
+
 ## 📊 Evaluar Modelos
 
 ```bash
