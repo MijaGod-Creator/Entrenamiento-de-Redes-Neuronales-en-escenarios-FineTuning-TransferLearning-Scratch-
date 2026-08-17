@@ -115,12 +115,6 @@ def load_pytorch_model(model_name):
 # Load the best model on startup
 try:
     best_model = get_best_model_name()
-    # Check if directory exists, if not, fallback to any available
-    model_dir = PROJECT_ROOT / "saved_models" / best_model
-    if not model_dir.exists():
-        all_dirs = [d.name for d in (PROJECT_ROOT / "saved_models").iterdir() if d.is_dir() and (d / "best_model.pt").exists()]
-        if all_dirs:
-            best_model = all_dirs[0]
     load_pytorch_model(best_model)
 except Exception as e:
     print(f"Warning: Could not load initial model: {e}")
@@ -153,25 +147,30 @@ def get_models():
         except Exception as e:
             print(f"Error parsing model comparison metrics: {e}")
 
+    model_names_to_check = set()
     if models_dir.exists():
-        for model_path in models_dir.glob("*/best_model.pt"):
-            name = model_path.parent.name
-            if "smoke_test" in name:
-                continue
+        for d in models_dir.iterdir():
+            if d.is_dir() and "smoke_test" not in d.name:
+                model_names_to_check.add(d.name)
+    if metrics_map:
+        for k in metrics_map.keys():
+            if "smoke_test" not in k:
+                model_names_to_check.add(k)
                 
-            metrics = metrics_map.get(name, {
-                "accuracy": 0.0,
-                "f1_macro": 0.0,
-                "inference_ms": 0.0,
-                "num_parameters": 0
-            })
-            
-            available_models.append({
-                "name": name,
-                "is_current": name == current_model_name,
-                "is_recommended": name == best_model_name,
-                "metrics": metrics
-            })
+    for name in model_names_to_check:
+        metrics = metrics_map.get(name, {
+            "accuracy": 0.0,
+            "f1_macro": 0.0,
+            "inference_ms": 0.0,
+            "num_parameters": 0
+        })
+        
+        available_models.append({
+            "name": name,
+            "is_current": name == current_model_name,
+            "is_recommended": name == best_model_name,
+            "metrics": metrics
+        })
             
     # Sort available models: recommended first, then by F1 score descending
     available_models.sort(key=lambda x: (x["is_recommended"], x["metrics"]["f1_macro"]), reverse=True)
