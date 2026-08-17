@@ -80,7 +80,18 @@ def load_pytorch_model(model_name):
     
     model_path = PROJECT_ROOT / "saved_models" / model_name / "best_model.pt"
     if not model_path.exists():
-        raise FileNotFoundError(f"Model file not found at {model_path}")
+        print(f"Modelo local no encontrado. Descargando {model_name} desde Hugging Face...")
+        try:
+            from huggingface_hub import hf_hub_download
+            import shutil
+            hf_repo = "MijaKun/Reconocimiento-de-Emociones-Faciales-RAFDB"
+            rel_path = f"saved_models/{model_name}/best_model.pt"
+            downloaded = hf_hub_download(repo_id=hf_repo, filename=rel_path)
+            model_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(downloaded, model_path)
+        except Exception as e:
+            print(f"Error descargando modelo desde Hugging Face: {e}")
+            raise FileNotFoundError(f"Model file not found at {model_path}")
         
     print(f"Loading model: {model_name} on {device}...")
     checkpoint = torch.load(model_path, map_location=device)
