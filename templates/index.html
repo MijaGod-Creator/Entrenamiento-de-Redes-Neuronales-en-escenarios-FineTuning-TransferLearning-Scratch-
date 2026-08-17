@@ -780,6 +780,11 @@
                 const current = modelList.find(m => m.is_current) || modelList[0];
                 if (current) {
                     updateMetricsUI(current);
+                    fetch('/api/select_model', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ model_name: current.name })
+                    }).catch(err => console.error("Error auto-selecting model:", err));
                 }
             } catch (e) {
                 console.error("Error loading models list", e);

@@ -74,10 +74,18 @@ def get_best_model_name():
             print(f"Error reading comparison CSV: {e}")
     return "vgg16_fine_tuning_noaug" # Default fallback
 
+models_cache = {}
+
 def load_pytorch_model(model_name):
-    """Loads a PyTorch model dynamically into memory."""
+    """Loads a PyTorch model dynamically into memory with caching."""
     global current_model, current_model_name, current_model_config
     
+    if model_name in models_cache:
+        current_model, current_model_config = models_cache[model_name]
+        current_model_name = model_name
+        print(f"Model {model_name} loaded from memory cache.")
+        return
+        
     model_path = PROJECT_ROOT / "saved_models" / model_name / "best_model.pt"
     if not model_path.exists():
         print(f"Modelo local no encontrado. Descargando {model_name} desde Hugging Face...")
@@ -91,7 +99,7 @@ def load_pytorch_model(model_name):
             shutil.copy(downloaded, model_path)
         except Exception as e:
             print(f"Error descargando modelo desde Hugging Face: {e}")
-            raise FileNotFoundError(f"Model file not found at {model_path}")
+            raise FileNotFoundError(f"Model file not found at {model_path}: {e}")
         
     print(f"Loading model: {model_name} on {device}...")
     checkpoint = torch.load(model_path, map_location=device)
@@ -107,6 +115,7 @@ def load_pytorch_model(model_name):
     model.to(device)
     model.eval()
     
+    models_cache[model_name] = (model, config)
     current_model = model
     current_model_name = model_name
     current_model_config = config
@@ -198,9 +207,15 @@ def select_model():
 @app.route('/api/predict', methods=['POST'])
 def predict():
     """Processes an image, detects the face, and runs emotion prediction."""
-    global current_model
+    global current_model, current_model_name
     if current_model is None:
-        return jsonify({"error": "No model loaded"}), 500
+        target = current_model_name or get_best_model_name() or "poster_v2_scratch_aug"
+        try:
+            with model_lock:
+                load_pytorch_model(target)
+        except Exception as e:
+            print(f"Auto-load model error: {e}")
+            return jsonify({"error": f"No model loaded and failed to auto-load: {str(e)}"}), 500
         
     # Get image from request
     file = request.files.get("image")
