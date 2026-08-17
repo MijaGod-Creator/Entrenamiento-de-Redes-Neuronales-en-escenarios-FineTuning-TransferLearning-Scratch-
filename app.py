@@ -102,7 +102,10 @@ def load_pytorch_model(model_name):
             raise FileNotFoundError(f"Model file not found at {model_path}: {e}")
         
     print(f"Loading model: {model_name} on {device}...")
-    checkpoint = torch.load(model_path, map_location=device)
+    try:
+        checkpoint = torch.load(model_path, map_location=device, weights_only=False)
+    except TypeError:
+        checkpoint = torch.load(model_path, map_location=device)
     config_data = checkpoint["config"]
     
     # Reconstruct config

@@ -579,7 +579,10 @@ class SwinFaceFER(nn.Module):
         Loads pre-trained Swin Transformer face weights (e.g. from MS-Celeb-1M or WebFace).
         Only loads matching backbone weights (keys starting with 'backbone.') to prevent shape conflicts in FAM/classification layers.
         """
-        checkpoint = torch.load(weight_path, map_location='cpu')
+        try:
+            checkpoint = torch.load(weight_path, map_location='cpu', weights_only=False)
+        except TypeError:
+            checkpoint = torch.load(weight_path, map_location='cpu')
         
         # Determine if checkpoint is nested (e.g., 'state_dict' or 'model')
         state_dict = checkpoint.get('state_dict', checkpoint.get('model', checkpoint))
