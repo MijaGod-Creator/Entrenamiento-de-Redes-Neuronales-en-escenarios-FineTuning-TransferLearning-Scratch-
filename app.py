@@ -52,7 +52,14 @@ current_model_config = None
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Initialize Face Detector
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+try:
+    if hasattr(cv2, 'data') and hasattr(cv2, 'CascadeClassifier'):
+        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    else:
+        face_cascade = None
+except Exception as e:
+    print(f"Aviso detector facial Haar: {e}")
+    face_cascade = None
 
 def get_best_model_name():
     """Reads model_comparison.csv to find the model with the highest F1-Score."""
