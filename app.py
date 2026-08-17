@@ -87,8 +87,9 @@ def load_pytorch_model(model_name):
         return
         
     model_path = PROJECT_ROOT / "saved_models" / model_name / "best_model.pt"
-    if not model_path.exists():
-        print(f"Modelo local no encontrado. Descargando {model_name} desde Hugging Face...")
+    # Detect if file is missing or is a Git LFS text pointer (< 10 KB)
+    if not model_path.exists() or model_path.stat().st_size < 10000:
+        print(f"Descargando archivo binario real de {model_name} desde Hugging Face...")
         try:
             from huggingface_hub import hf_hub_download
             import shutil
